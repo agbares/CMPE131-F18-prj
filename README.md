@@ -24,13 +24,13 @@ tests/
 views/
 ```
 - `bin/` -- Express startup scripts
-- `middlewares/` -- Express middlewares which processes incoming requests before handing them down to the routes
-- `models/` -- Models represent data, business logic, and handles storage
+- `middlewares/` -- Express middlewares which processes incoming requests before handing them down to the routes - BACKEND
+- `models/` -- Models represent data, business logic, and handles storage - BACKEND
 - `node_modules/` -- Contains Node.js modules
 - `public/` -- Contains static files (e.g. CSS, images, javascript)
-- `routes/` -- Defines application routes 
+- `routes/` -- Defines application routes - BACKEND 
 - `tests/` -- Tests application
-- `views/` -- Contains templates which are rendered and served by your routes
+- `views/` -- Contains templates which are rendered and served by your routes - FRONTEND 
 
 ## 2. Application Stack
 
@@ -40,9 +40,9 @@ views/
 - PUG Templating Engine
 
 ### Backend
-- Node.js
-- Express.js
-- MySQL
+- Node.js     -The server
+- Express.js  -Frame work aka tool: makes controlling MVC logic easier  
+- MySQL 
 
 ## 3. Making Changes to the Repository
 Work in your designated branch. Designated branches are named after your name. When you want to submit major changes to the master branch, create a `Pull Request` from your branch into the `master` branch.
