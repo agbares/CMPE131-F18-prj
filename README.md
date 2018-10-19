@@ -40,8 +40,8 @@ views/
 - PUG Templating Engine
 
 ### Backend
-- Node.js     -The server
-- Express.js  -Frame work aka tool: makes controlling MVC logic easier  
+- Node.js     - The server
+- Express.js  - Framework aka tool: makes controlling MVC logic easier  
 - MySQL 
 
 ## 3. Making Changes to the Repository
@@ -49,6 +49,7 @@ Work in your designated branch. Designated branches are named after your name. W
 
 ## 4. Development Environment Requirements
 - Node.js
+- nodemon
 - IDE, Coding Text Editor (Sublime, VS Code, Atom are good)
 - GitHub Desktop (Using Git on commandline works too)
 - Your favorite browser
@@ -59,10 +60,19 @@ Work in your designated branch. Designated branches are named after your name. W
 2. Download the current version. As of writing the version is `10.11.0`. Newer versions are fine. Don't download LTS
 3. Follow installation prompts. Use default values
 
+### Installing nodemon
+Nodemon is a development tool that automatically reloads changes into the Node.js server, so that you do not have to restart the server for every change.
+1. Open terminal/commandline.
+2. Navigate to project directory
+3. Execute `npm install -g nodemon`
+
 ## 5. Starting Node Server
 1. Open terminal/commandline.
 2. Navigate to project directory
-3. Execute `npm start`
+3. Execute `nodemon start`
+
+### Where Can I View the Webpage?
+Starting up the Node Server allows you to run your own copy of the project. To view the website, head to `http://localhost:3000` in your web browser.
 
 ## 6. Deploying Application Online (to Heroku)
 The `master` branch is always deployed online on Heroku. Whenever a commit is made onto `master`, Heroku will update and deploy the latest changes.
