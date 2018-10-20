@@ -254,7 +254,6 @@ function insertDocument(collectionName, object, callback) {
         // Unsuccessful write
         reject(err);
         disconnect();
-
       });
     }).catch(function(err) {
       // Unsuccessful Conection
