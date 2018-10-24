@@ -30,6 +30,30 @@ const SALTROUNDS = 10;
  * @param {object} res - Contains info whether if the user exists, if it was a successful change {exists, success}.
  */
 
+/**
+ * @callback user~updateLastSignOnCallback
+ * @param {Error} err - Represents any error that may have occurred during execution.
+ * @param {bool} exists - Whether the user exists in the DB.
+ */
+
+/**
+ * @callback user~confirmUserCallback
+ * @param {Error} err - Represents any error that may have occurred during execution.
+ * @param {bool} exists - Whether the user exists in the DB.
+ */
+
+ /**
+ * @callback user~getUserIDCallback
+ * @param {Error} err - Represents any error that may have occurred during execution.
+ * @param {object} res - Contains info whether the user exists, and their ID. {exists, user_ID}
+ */
+
+ /**
+ * @callback user~isConfirmedCallback
+ * @param {Error} err - Represents any error that may have occurred during execution.
+ * @param {object} res - Contains info whether the user exists, and if they confirmed their account. {exists, isConfirmed}
+ */
+
 /* Function Declarations */
 
 /**
@@ -158,7 +182,7 @@ function authenticate(email, password, callback) {
  * @param {string} user_ID - The user's user_ID.
  * @param {string} oldPassword - User's old password to be verified against the DB.
  * @param {string} newPassword - User's new password to save.
- * @param {changePasswordCallback} [callback]
+ * @param {changePasswordCallback} [callback] - The callback function that handles the response.
  * @returns {Promise} Promise object that represents the response.
  */
 function changePassword(user_ID, oldPassword, newPassword, callback) {
@@ -236,8 +260,190 @@ function changePassword(user_ID, oldPassword, newPassword, callback) {
   return promise;
 }
 
+/**
+ * Updates the user's last_signon_timestamp field
+ * @function updateLastSignOn
+ * @param {string} user_ID - The User's user_ID.
+ * @param {updateLastSignOnCallback} [callback] - The callback function that handles the response.
+ * @returns {Promise} - Promise object that represents the response.
+ */
+function updateLastSignOn(user_ID, callback) {
+  const promise = new Promise(function(resolve, reject) {
+    // Used to search in the DB
+    const filter = {_id: ObjectID(user_ID)};
+
+    // Fetch the user
+    db.fetchAsArray(constants.COLLECTION_USERS, filter).then(function(arr) {
+      // Check if the user exists
+      if (arr.length <= 0) {
+        // User does not exist
+        resolve(false);
+      
+      } else {
+        // User does exist, so update their timestamp
+        const updateQuery = {$set: {last_signon_timestamp: Date.now()}};
+        db.updateOneDocument(constants.COLLECTION_USERS, filter, updateQuery).then(function(res) {
+          // Successful update
+          resolve(true);
+        }).catch(function(err) {
+          // Unsuccessful update
+          reject(err);
+        });
+      }
+    }).catch(function(err) {
+      // Unsuccessful fetch
+      reject(err);
+    });
+  });
+
+  // Handle a possible callback function
+  if (callback !== undefined) {
+    callback = promise.then(callback.bind(null, null)).catch(callback);
+  }
+
+  return promise;
+}
+
+/** 
+ * Updates the User's confirmed_account field
+ * @function confirmUser
+ * @param {string} email - The user's email.
+ * @param {confirmUserCallback} [callback] - The callback function that handles the response.
+ * @returns {Promise} - Promise object that represents the response.
+ */
+function confirmUser(email, callback) {
+  const promise = new Promise(function(resolve, reject) {
+    const filter = {email: email};
+
+    // Fetch the user
+    db.fetchAsArray(constants.COLLECTION_USERS, filter).then(function(arr) {
+      // Check if the user exists
+      if (arr.length <= 0) {
+        // User does not exist
+        resolve(false);
+      
+      } else {
+        // User does exist, so update confirm them
+        const updateQuery = {$set: {confirmed_account: true}};
+        db.updateOneDocument(constants.COLLECTION_USERS, filter, updateQuery).then(function(res) {
+          // Successful update
+          resolve(true);
+
+        }).catch(function(err) {
+          // Unsuccessful update
+          reject(err);
+        });
+      }
+    }).catch(function(err) {
+      // Unsuccessful fetch
+      reject(err);
+    });
+  });
+
+  // Handle a possible callback function
+  if (callback !== undefined) {
+    callback = promise.then(callback.bind(null, null)).catch(callback);
+  }
+
+  return promise;
+}
+
+/** 
+ * Gets the User's ID.
+ * @function getUserID
+ * @param {string} email - The User's email.
+ * @param {getUserIDCallback} [callback] - The callback function that handles the response.
+ * @returns {Promise} - Promise object that represents the response.
+ */
+function getUserID(email, callback) {
+  const promise = new Promise(function(resolve, reject) {
+    const query = {email: email};
+
+    db.fetchAsArray(constants.COLLECTION_USERS, query).then(function(arr) {
+      // Successful fetch
+
+      let responseObj = {
+        exists: null,
+        user_ID: null
+      };
+
+      // Check if the user exists
+      if (arr.length <= 0) {
+        // User does not exist
+        responseObj['exists'] = false;
+        resolve(responseObj);
+
+      } else {
+        // User does exist
+        responseObj['exists'] = true;
+        responseObj['user_ID'] = arr[0]['_id'];
+        resolve(responseObj);
+      }
+    }).catch(function(err) {
+      // Unsuccessful fetch
+      reject(err);
+    });
+  });
+
+  // Handle a possible callback function
+  if (callback !== undefined) {
+    callback = promise.then(callback.bind(null, null)).catch(callback);
+  }
+
+  return promise;
+}
+
+/**
+ * Checks whether the user has confirmed their account.
+ * @function isConfirmed
+ * @param {string} email - The user's email
+ * @param {isConfirmedCallback} [callback] - The callback function that handles the response.
+ * @returns {Promise} - Promise object that represents the response.
+ */
+function isConfirmed(email, callback) {
+  const promise = new Promise(function(resolve, reject) {
+    const query = {email: email};
+
+    db.fetchAsArray(constants.COLLECTION_USERS, query).then(function(arr) {
+      // Successful fetch
+
+      let responseObj = {
+        exists: null,
+        isConfirmed: null
+      };
+
+      // Check if the user exists
+      if (arr.length <= 0) {
+        // User does not exist
+        responseObj['exists'] = false;
+        resolve(responseObj);
+
+      } else {
+        // User does exist
+        responseObj['exists'] = true;
+        responseObj['isConfirmed'] = arr[0]['confirmed_account'];
+        resolve(responseObj);
+      }
+    }).catch(function(err) {
+      // Unsuccessful fetch
+      reject(err);
+    });
+  });
+
+  // Handle a possible callback function
+  if (callback !== undefined) {
+    callback = promise.then(callback.bind(null, null)).catch(callback);
+  }
+
+  return promise;
+}
+
 module.exports = {
   createUser,
   authenticate,
-  changePassword
+  changePassword,
+  updateLastSignOn,
+  confirmUser,
+  getUserID,
+  isConfirmed
 };
