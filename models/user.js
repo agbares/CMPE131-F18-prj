@@ -1,5 +1,5 @@
 /**
- * User model module that
+ * user model module.
  * @module user
  */
 
