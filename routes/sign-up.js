@@ -12,7 +12,6 @@ var createError = require('http-errors');
 
 /* Routes */
 router.get('/', function(req, res, next) {
-  console.log('sign-up router');
   res.render('sign-up/index');
 });
 
