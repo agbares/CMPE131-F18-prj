@@ -1,1 +1,34 @@
 // Sign-up Index Template
+
+doctype html
+
+head
+    title Sign-up
+
+body
+    h1 Welcome to Spartan Financial Group
+    h2 Create an account
+    br
+
+form(method = "post" action = "/sign-up")
+    p First name:
+    <input type="text" name="first-name">
+    <br>
+
+    p Last name:
+    <input type="text" name="last-name">
+    <br>
+
+    p Email:
+    <input type="text" name="email">
+
+    p Password:
+    <input type="text" name="password">
+
+    p Please re-enter your password:
+    <input type="text" name="confirm-password">
+
+    <br>
+    br
+    <input type="submit">
+
