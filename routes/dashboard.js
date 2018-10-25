@@ -11,7 +11,7 @@ var auth = require('../middlewares/auth')
 
 /* Routes */
 router.get('/', auth.isAuthenticated, function(req, res) {
-  res.send('Dashboard');
+  res.render('dashboard/index');
 });
 
 /* Export Module */
