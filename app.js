@@ -9,7 +9,7 @@ var session = require('express-session');
 var flash = require('connect-flash');
 var app = express();
 var mongoose = require('mongoose');
-var dbConstants = require('./db_config');
+var dbConstants = require('./config/db_config');
 
 const dbURI = `mongodb+srv://${dbConstants.DB_USER}:${dbConstants.DB_PASSWORD}@${dbConstants.DB_HOST}/${dbConstants.DB_NAME}`;
 mongoose.connect(dbURI);

@@ -8,7 +8,7 @@ const bcrypt = require('bcrypt');
 const ObjectID = require('mongodb').ObjectID;
 const db = require('../db');
 const mongoose = require('mongoose');
-const constants = require('../db_config');
+const constants = require('../config/db_config');
 
 const SALTROUNDS = 10;
 
