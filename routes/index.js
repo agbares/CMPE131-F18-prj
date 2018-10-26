@@ -7,7 +7,7 @@
 var express = require('express');
 var router = express.Router();
 var passport = require('passport');
-var initPassport = require('../middlewares/passport').initPassport;
+var initPassport = require('../config/passport_config').initPassport;
 
 /* Initialize Passport */
 initPassport();
