@@ -29,20 +29,9 @@ router.post('/', function(req, res, next) {
     return;
   }
 
-  // Create a new user
-  var newUser = User({
-    first_name: firstName,
-    last_name: lastName,
-    email: email,
-    password: password,
-    SSN: null,
-    birthdate: null,
-    confirmed_account: true,
-    opening_timestamp: Date.now(),
-    last_signon_timestamp: null
-  });
+
   
-  User.createUser(newUser).then((user) => {
+  User.createUser(firstName, lastName, email, password, null, null).then((user) => {
     console.log(user);
     // Log the user in
     return req.logIn(user, (err) => {

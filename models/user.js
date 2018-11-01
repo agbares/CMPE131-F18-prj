@@ -89,9 +89,28 @@ userSchema.statics.generateHash = async function(password) {
 /**
  * Creates a new user in the DB.
  * @function createUser
- * @param {User} newUser - The new user to save.
+ * @param {string} firstName
+ * @param {string} lastName
+ * @param {string} email
+ * @param {string} password
+ * @param {string} SSN
+ * @param {string} birthdate
+ * @returns {Promise} - Promise object that represents the response.
  */
-userSchema.statics.createUser = async function(newUser) {
+userSchema.statics.createUser = async function(firstName, lastName, email, password, SSN, birthdate) {
+
+  // Create a new user
+  var newUser = this({
+    first_name: firstName,
+    last_name: lastName,
+    email: email,
+    password: password,
+    SSN: SSN,
+    birthdate: birthdate,
+    confirmed_account: false,
+    opening_timestamp: Date.now(),
+    last_signon_timestamp: null
+  });
 
   var user = await this.findOne({email: newUser.email});
   
