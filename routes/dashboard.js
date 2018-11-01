@@ -18,11 +18,11 @@ router.get('/', auth.isAuthenticated, function(req, res) {
     creditAccount: null
   }
   
-  account.find({user_ID: req.user._id}, function(err, res){
+  account.find({user_ID: req.user._id}, function(err, accounts){
     if(err){
       console.log(err);
     }
-    console.log(res);
+    console.log(accounts);
     
     for(var i = 0; i < res.length; i++)
     {
