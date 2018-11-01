@@ -18,6 +18,7 @@ router.use('/sign-up', require('./sign-up'));
 router.use('/sign-out', require('./sign-out'));
 router.use('/dashboard', require('./dashboard'));
 router.use('/dashboard/settings', require('./settings'));
+router.use('/dashboard/account', require('./account'));
 
 /* Routes */
 router.get('/', function(req, res, next) {
