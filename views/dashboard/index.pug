@@ -3,6 +3,61 @@ html
   head
     title Dashboard
   body
-    h1 Dashboard
+
+    <div class="topnav">
+      a(class="active" href="./dashboard") Dashboard
+      a(href="/find-atm") Find nearest ATM
+      a(href="../sign-out") Sign Out
+    </div>
+
+    h1 Spartan Financial Group Banking
+    h2 Dashboard
+
+    if checkingAccount
+      p 
+        a(href="../sign-out") View Checking account
+    else
+      p 
+        a(href="../sign-out") Open a Checking account
+
+    br
+    br
+  
+    if savingAccount
+      p
+        a(href="../sign-out") View Saving account
+    else
+      p 
+        a(href="../sign-out") Open a Saving account
+
+    br
+    br
+
+    if creditAccount
+      p
+        a(href="../sign-out") View Credit account
+    else
+      p
+        a(href="../sign-out") Open Credit account
+
+    br
+    br
+
+    p 
+      a(href="../sign-out") Make deposit
+      
+      br
+      br
+
+      a(href="../sign-out") Pay bill
+
+      br
+      br
+
+      a(href="../sign-out") Setting
+
+      br
+      br
+
     p
       a(href="../sign-out") Sign Out
