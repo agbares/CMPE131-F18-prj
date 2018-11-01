@@ -23,41 +23,27 @@ router.post('/', function(req, res, next) {
   const password = req['body']['password'];
   const confirmPassword = req['body']['confirm-password'];
 
+  // Check data from the form
+  if (!isValidInput(firstName, lastName, email, password, confirmPassword)) {
+    res.redirect('sign-up');
+    return;
+  }
+
   // Create a new user
   var newUser = User({
     first_name: firstName,
     last_name: lastName,
     email: email,
-    password: null,
+    password: password,
     SSN: null,
     birthdate: null,
     confirmed_account: true,
     opening_timestamp: Date.now(),
     last_signon_timestamp: null
   });
-
-  // Check data from the form
-  if (!isValidInput(firstName, lastName, email, password, confirmPassword)) {
-    res.redirect('sign-up');
-    return;
-  }
   
-  // Check if the user already exists in the database
-  User.findOne({email: email}).then((user) => {
-    if (user) {
-      // User exists already
-      return Promise.reject(new Error("User exists already"));
-    }
-    
-    // Generate the password hash
-    return newUser.generateHash(password);
-  }).then((passHash) => {
-    newUser.password = passHash;
-
-    // Save the user into the DB
-    return newUser.save();
-  }).then((user) => {
-    
+  User.createUser(newUser).then((user) => {
+    console.log(user);
     // Log the user in
     return req.logIn(user, (err) => {
       if (err) {
