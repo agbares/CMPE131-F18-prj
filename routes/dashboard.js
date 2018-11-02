@@ -6,9 +6,9 @@
 /* Dependencies */
 var express = require('express');
 var router = express.Router();
-var account = require('../models/account')
-// var passport = require('passport');
 var auth = require('../middlewares/auth')
+var User = require('../models/user');
+var Account = require('../models/account');
 
 /* Routes */
 router.get('/', auth.isAuthenticated, function(req, res) {
@@ -18,7 +18,7 @@ router.get('/', auth.isAuthenticated, function(req, res) {
     creditAccount: null
   }
   
-  account.find({user_ID: req.user._id}, function(err, accounts){
+  Account.find({user_ID: req.user._id}, function(err, accounts){
     if(err){
       console.log(err);
     }
