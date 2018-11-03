@@ -6,13 +6,12 @@
 /* Dependencies */
 var express = require('express');
 var router = express.Router();
-var passport = require('passport');
+var passport = require('passport')
 var User = require('../models/user');
-var createError = require('http-errors');
 
 /* Routes */
 router.get('/', function(req, res, next) {
-  res.render('sign-up/index');
+  res.render('sign-up/index', {error: req.flash('error')[0]});
 });
 
 router.post('/', function(req, res, next) {
@@ -25,30 +24,26 @@ router.post('/', function(req, res, next) {
 
   // Check data from the form
   if (!isValidInput(firstName, lastName, email, password, confirmPassword)) {
-    res.redirect('sign-up');
-    return;
+    req.flash('error', 'All fields are required.');
+    return res.redirect('sign-up');
   }
 
-
-  
   User.createUser(firstName, lastName, email, password, null, null).then((user) => {
-    console.log(user);
-    // Log the user in
-    return req.logIn(user, (err) => {
-      if (err) {
-        return Promise.reject(err);
-      
-      } else {
-        return Promise.resolve();
-      }
-    });
-  }).then(() => {
-    return res.redirect('/dashboard');
+    if (!user) {
+      req.flash('error', 'User already exists with the given email');
+      return res.redirect('sign-up');
+    }
 
-  }).catch((err) => {
-    next(err);
+    // User creation was successful, so we'll pass control to the auth middleware
+    // to authenticate the new user.
+    next();
   });
-});
+
+}, passport.authenticate('local', {
+  successRedirect: '/dashboard',
+  failureRedirect: '/sign-in',
+  failureFlash: true
+}));
 
 /* Utility Methods */
 

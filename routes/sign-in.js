@@ -10,7 +10,7 @@ var passport = require('passport');
 
 /* Routes */
 router.get('/', function(req, res, next) {
-  res.render('sign-in/index', {});
+  res.render('sign-in/index', {error: req.flash('error')[0]});
 });
 
 router.post('/', passport.authenticate('local', {
