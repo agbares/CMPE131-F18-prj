@@ -14,29 +14,6 @@ var dbConstants = require('./config/db_config');
 const dbURI = `mongodb+srv://${dbConstants.DB_USER}:${dbConstants.DB_PASSWORD}@${dbConstants.DB_HOST}/${dbConstants.DB_NAME}`;
 mongoose.connect(dbURI);
 
-//Test code here for models
-var accounts = require('./models/account');
-
-var account = new accounts({
-  user_ID: '5bd273e7e203fb570415ed6d',
-  type: 'Checking',
-  balance: 20,
-  minimum_due: null,
-  limit: null,
-  payment_date: null
-});
-
-// accounts.find({user_ID: '5bd273e7e203fb570415ed6d', type: 'Checking'}, function(err, res){
-//   if(err){
-//     console.log(err);
-//   }
-//   console.log(res);
-// })
-// account.save(function (err, accountsNew) {
-//   if (err) return console.error(err);
-//   console.log(accountsNew)
-// });
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
