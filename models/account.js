@@ -18,16 +18,6 @@ var accountSchema = mongoose.Schema({
 
 /* Methods */
 
-/**
- * Checks whether an account belongs to a user.
- * @function belongsToUser
- * @param {string} user_ID - The user whose ownership of the account is in question.
- * @returns {boolean} - Denotes whether the account belongs to the user.
- */
-accountSchema.methods.belongsToUser = function(user_ID) {
-  return this.user_ID == user_ID;
-}
-
 /* Statics */
 
 /**
@@ -48,6 +38,20 @@ accountSchema.statics.getAccount = async function(account_ID) {
  */
 accountSchema.statics.getAccounts = async function(user_ID) {
   return await this.find({user_ID: user_ID});
+}
+
+/**
+ * Checks whether an account belongs to a user.
+ * @function belongsToUser
+ * @param {string} account_ID - The ID of the account in question.
+ * @param {string} user_ID - The user whose ownership of the account is in question.
+ * @returns {boolean} - Denotes whether the account belongs to the user.
+ */
+accountSchema.statics.belongsToUser = async function(account_ID, user_ID) {
+  if (await this.findOne({_id: account_ID, user_ID: user_ID}) == null)
+    return false;
+
+  return true;
 }
 
 /* Export Module as a Mongoose Model*/
