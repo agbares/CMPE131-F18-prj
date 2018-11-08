@@ -13,12 +13,17 @@ head
 	script(src="js/jquery.backstretch.min.js")
 
 body
+	// A dark horizontal navbar that collapses and replaced by a button on small screens
 	nav(class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top main-nav")
+		// Collapsible Navbar Button
 		button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar")
 			span(class="navbar-toggler-icon")
+		// Brand/logo which is center justified when viewed on smaller screens
 		div(class="mx-auto")
 			a(class="navbar-brand" href="/") SFG Banking
+		// Collapsible Navbar
 		div(class="collapse navbar-collapse" id="collapsibleNavbar")
+			// Links
 			ul(class="nav navbar-nav flex-fill justify-content-center")
 				li(class="nav-item")
 					a(class="nav-link" href="/") Home
@@ -27,14 +32,15 @@ body
 				li(class="nav-item")
 					a(class="nav-link" href="#") Contact Us
 	br
-
+	
+	// Gridded sign-up form with required style when using fixed navbar
 	div(class="container" style="margin-top:80px;")
-		h1(style="text-align:center;") Welcome to Spartan Financial Group Banking
-		h2(style="text-align:center;") Create an account
-
+		h1(style="text-align:center; margin-bottom:30px;") Welcome to Spartan Financial Group Banking
 		div(class="row")
 			div(class="col-sm-4")
 			div(class="col-sm-4" style="background-color:AliceBlue; border-radius: 8px; padding-top:20px; padding-right:50px; padding-bottom:20px; padding-left:50px;")
+				div(class="text-center") #{error}
+				h2(style="text-align:center;") Create an account
 				form(method="post" action="/sign-up")
 					div(class="form-group")
 						label(for="first-name") First name:
@@ -50,6 +56,8 @@ body
 						input(type="password" class="form-control" id="password" placeholder="Enter password" name="password")
 					div(class="form-group")
 						label(for="confirm-password") Please re-enter your password:
-						input(type="confirm-password" class="form-control" id="confirm-password" placeholder="Re-enter your password" name="confirm-password")
+						input(type="password" class="form-control" id="confirm-password" placeholder="Re-enter your password" name="confirm-password")
 					button(type="submit" class="btn btn-primary btn-block" value="Submit") Submit
+			div(class="col-sm-4")
+		div(style="margin-bottom:50px;")
 	script $.backstretch("img/SJSU_campus.jpg");
