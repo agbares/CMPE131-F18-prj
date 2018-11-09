@@ -1,0 +1,70 @@
+// Transfer Index Template
+html
+  head
+    title Transfer
+    meta(charset="utf-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no")
+    link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css")
+    script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js")
+    script(src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js")
+    script(src="js/jquery.backstretch.min.js")
+
+  body
+
+    nav(class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top main-nav")
+      button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar")
+        span(class="navbar-toggler-icon")
+      div(class="mx-auto")
+        a(class="navbar-brand" href="/") SFG Banking
+      div(class="collapse navbar-collapse" id="collapsibleNavbar")
+        ul(class="nav navbar-nav flex-fill justify-content-center")
+          li(class="nav-item")
+            a(class="nav-link" href="/dashboard") Dashboard
+          li(class="nav-item")
+            a(class="nav-link" href="#") Pay bill
+          li(class="nav-item")
+            a(class="nav-link" href="#") Find nearest ATM
+          li(class="nav-item")
+            a(class="nav-link" href="../sign-out") Sign Out
+    br
+    <div class="container" style="margin-top:80px"></div>
+
+    h1 Tranfer
+
+    h2 Dear customer, you can tranfer money between your accounts here. 
+    br
+
+    <form>
+        if !checkingAccount && !savingAccount
+            p Tranfer function is unavailable due to unavailable account information.
+            p Please open a new account or contact for help. 
+        
+        else 
+            p Please choose a account you want to transfer money from
+            if checkingAccount
+                <input type="radio" name="transferfrom" value="Checking" checked><br>
+  
+            if savingAccount
+                <input type="radio" name="transferfrom" value="Saving"><br>
+                <br><br><br>
+            
+            p Please choose a account you want to transfer money to
+            if checkingAccount
+                <input type="radio" name="transferto" value="Checking" checked><br>
+            if savingAccount
+                <input type="radio" name="transferto" value="Saving"><br>
+            if creditAccount
+                <input type="radio" name="transferto" value="Credit"><br>
+                <br><br>
+            <input type="submit" value="Submit">
+    </form>
+
+    <br><br><br>
+    p
+      a(href="/dashboard") Return to Dashboard
+    
+      br
+
+    p
+      a(href="../sign-out") Sign Out
