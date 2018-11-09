@@ -22,7 +22,7 @@ html
           li(class="nav-item")
             a(class="nav-link" href="/dashboard") Dashboard
           li(class="nav-item")
-            a(class="nav-link" href="#") Transfer
+            a(class="nav-link" href="./transfer") Transfer
           li(class="nav-item")
             a(class="nav-link" href="#") Find nearest ATM
           li(class="nav-item")
@@ -32,19 +32,40 @@ html
 
     h1 Pay bill
 
-    h2 Dear customer, you can pay your bill here. 
+    if !checkingAccount && !savingAccount &&! creditAccount
+      p Pay bill function is unavailable due to unavailable account information.
+      p Please open a new account or contact for help. 
+        
+    else 
+      h2 Dear customer, you can pay your bill here. 
 
-    <form action= "/">
-        p Please enter the bill number: <br>
-        <input type="text" name="billnumber"><br>
-        p Please enter the amount: <br>
-        <input type="number" name="payamount" ><br>
-        p Please add a note: <br>
-        <input type="text" name="paynote" ><br>
-        <br>
-        <input type="submit" value="Submit">
-        <input type="reset">
-    </form>
+      <form action= "/">
+          p Please enter the bill number:
+          <input type="text" name="billnumber"><br>
+          br
+
+          p Please choose a account you want to pay the bill with
+          if checkingAccount
+            <input type="radio" name="paywith" value="Checking" checked> Checking Account <br>
+            p Balance: $#{checkingAccount.balance} 
+          if savingAccount
+            <input type="radio" name="paywith" value="Saving"> Saving Account<br>
+            p Balance: $#{savingAccount.balance}
+          if creditAccount
+            <input type="radio" name="paywith" value="Credit"> Credit Account<br>
+            p Balance: $#{creditAccount.balance}
+            <br>
+
+          p Please enter the amount:
+          <input type="number" name="payamount" ><br>
+          br
+
+          p Please add a note:
+          <input type="text" name="paynote" ><br>
+          <br>
+          <input type="submit" value="Submit">
+          <input type="reset">
+      </form>
 
     br
     br

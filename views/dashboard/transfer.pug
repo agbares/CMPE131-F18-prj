@@ -22,7 +22,7 @@ html
           li(class="nav-item")
             a(class="nav-link" href="/dashboard") Dashboard
           li(class="nav-item")
-            a(class="nav-link" href="#") Pay bill
+            a(class="nav-link" href="./billpay") Pay bill
           li(class="nav-item")
             a(class="nav-link" href="#") Find nearest ATM
           li(class="nav-item")
@@ -32,35 +32,43 @@ html
 
     h1 Tranfer
 
-    h2 Dear customer, you can tranfer money between your accounts here. 
-    br
-
-    <form>
-        if !checkingAccount && !savingAccount
+    if !checkingAccount && !savingAccount
             p Tranfer function is unavailable due to unavailable account information.
             p Please open a new account or contact for help. 
         
-        else 
-            p Please choose a account you want to transfer money from
-            if checkingAccount
-                <input type="radio" name="transferfrom" value="Checking" checked><br>
-  
-            if savingAccount
-                <input type="radio" name="transferfrom" value="Saving"><br>
-                <br><br><br>
-            
-            p Please choose a account you want to transfer money to
-            if checkingAccount
-                <input type="radio" name="transferto" value="Checking" checked><br>
-            if savingAccount
-                <input type="radio" name="transferto" value="Saving"><br>
-            if creditAccount
-                <input type="radio" name="transferto" value="Credit"><br>
-                <br><br>
-            <input type="submit" value="Submit">
-    </form>
+    else
+        h2 Dear customer, you can tranfer money between your accounts here. 
+        br
 
-    <br><br><br>
+        <form>
+            
+            h3 Please choose a account you want to transfer money from
+            if checkingAccount
+                <input type="radio" name="transferfrom" value="Checking" checked> Checking Account<br>
+                p Balance: $#{checkingAccount.balance}
+            if savingAccount
+                <input type="radio" name="transferfrom" value="Saving"> Saving Account<br>
+                p Balance: $#{savingAccount.balance}
+                <br><br>
+                
+            h3 Please choose a account you want to transfer money to
+            if checkingAccount
+                <input type="radio" name="transferto" value="Checking" checked> Checking Account <br>
+                p Balance: $#{checkingAccount.balance} 
+            if savingAccount
+                <input type="radio" name="transferto" value="Saving"> Saving Account<br>
+                p Balance: $#{savingAccount.balance}
+            if creditAccount
+                <input type="radio" name="transferto" value="Credit"> Credit Account<br>
+                p Balance: $#{creditAccount.balance}
+                <br>
+                
+            h3 Please enter the amount: <br>
+            <input type="number" name="tranferamount" ><br>
+            <input type="submit" value="Submit">
+        </form>
+
+    <br><br>
     p
       a(href="/dashboard") Return to Dashboard
     
