@@ -12,8 +12,8 @@ var Account = require('../models/account');
 /* Routes */
 router.get('/:accountId', auth.isAuthenticated, function(req, res, next) {
   
-  // res.render();
-  res.send('Specific Account Page'); // Remove when using res.render()
+   res.render("dashboard/account");
+  //res.send('Specific Account Page'); // Remove when using res.render()
 });
 
 
