@@ -63,7 +63,7 @@ router.get('/transfer', auth.isAuthenticated, function(req, res, next) {
         accountObj.creditAccount = accounts[i];
       }
     }
-
+    
     res.render('dashboard/transfer', accountObj);
 
   }).catch((err) => {
