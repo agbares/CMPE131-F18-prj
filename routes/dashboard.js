@@ -44,5 +44,59 @@ router.get('/', auth.isAuthenticated, function(req, res) {
   })
 });
 
+router.get('/transfer', auth.isAuthenticated, function(req, res, next) {
+  var accountObj = {
+    checkingAccount: null,
+    savingAccount: null,
+    creditAccount: null
+  }
+
+  Account.getAccounts(req.user._id).then((accounts) => {
+    for(var i = 0; i < accounts.length; i++) {
+      if(accounts[i].type == 'checking') {
+        accountObj.checkingAccount = accounts[i];
+      
+      } else if(accounts[i].type == 'saving') {
+        accountObj.savingAccount = accounts[i];
+      
+      } else if(accounts[i].type == 'credit') {
+        accountObj.creditAccount = accounts[i];
+      }
+    }
+
+    res.render('dashboard/transfer', accountObj);
+
+  }).catch((err) => {
+    next(err);
+  });
+});
+
+router.get('/billpay', auth.isAuthenticated, function(req, res, next) {
+  var accountObj = {
+    checkingAccount: null,
+    savingAccount: null,
+    creditAccount: null
+  }
+
+  Account.getAccounts(req.user._id).then((accounts) => {
+    for(var i = 0; i < accounts.length; i++) {
+      if(accounts[i].type == 'checking') {
+        accountObj.checkingAccount = accounts[i];
+      
+      } else if(accounts[i].type == 'saving') {
+        accountObj.savingAccount = accounts[i];
+      
+      } else if(accounts[i].type == 'credit') {
+        accountObj.creditAccount = accounts[i];
+      }
+    }
+
+    res.render('dashboard/billpay', accountObj);
+
+  }).catch((err) => {
+    next(err);
+  });
+});
+
 /* Export Module */
 module.exports = router;
