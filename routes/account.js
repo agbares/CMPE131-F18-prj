@@ -10,17 +10,15 @@ var auth = require('../middlewares/auth');
 var Account = require('../models/account');
 
 /* Routes */
-router.get('/:accountId', auth.isAuthenticated, function(req, res, next) {
-  
-   res.render("dashboard/account");
-  //res.send('Specific Account Page'); // Remove when using res.render()
-});
+router.get('/:accountId', auth.isAuthenticated, auth.accountBelongsToUser, function(req, res, next) {
+  const accountId = req.params.accountId;
 
-
-router.get('/:accountId/transfer', auth.isAuthenticated, function(req, res, next) {
-  
-  // res.render();
-  res.send('Account Transfer Page'); // Remove when using res.render()
+  Account.getAccount(accountId).then((account) => {
+    res.render('dashboard/account', { account : account});
+    
+  }).catch((err) => {
+    next(err);
+  });
 });
 
 /* Export Module */
