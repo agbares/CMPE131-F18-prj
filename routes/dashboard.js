@@ -71,6 +71,8 @@ router.get('/transfer', auth.isAuthenticated, function(req, res, next) {
   });
 });
 
+
+
 router.get('/billpay', auth.isAuthenticated, function(req, res, next) {
   var accountObj = {
     checkingAccount: null,
