@@ -9,7 +9,7 @@ const mongoose = require('mongoose');
 /* Schema */
 var transactionSchema = mongoose.Schema({
 account_ID: String,
-merchant_Name: String,
+merchant_name: String,
 type: String,
 description: String,
 amount: Number,
