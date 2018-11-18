@@ -14,22 +14,6 @@ var dbConstants = require('./config/db_config');
 const dbURI = `mongodb+srv://${dbConstants.DB_USER}:${dbConstants.DB_PASSWORD}@${dbConstants.DB_HOST}/${dbConstants.DB_NAME}`;
 mongoose.connect(dbURI);
 
-//Test code here
-// var accounts = require('./models/account');
-
-// accounts.findOne({user_ID: '5bd273e7e203fb570415ed6d', type: 'checking'}, function(err, res){
-//   if(err){
-//     console.log(err);
-//   }
-  
-//   console.log(res);
-// })
-
-// var accounts = require('./models/account');
-
-
-
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
