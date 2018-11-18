@@ -18,6 +18,17 @@ var accountSchema = mongoose.Schema({
 
 /* Methods */
 
+/**
+ * Deposits an amount to an account's balance.
+ * @function deposit
+ * @param {Number} amount - Amount to be deposited.
+ * @returns {Promise} - Promise object that represents the response.
+ */
+accountSchema.methods.deposit = async function(amount) {
+  this.balance += amount;
+  return await this.save();
+}
+
 /* Statics */
 
 /**
