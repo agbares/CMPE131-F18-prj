@@ -44,22 +44,22 @@ html
             
             h3 Please choose a account you want to transfer money from
             if checkingAccount
-                <input type="radio" name="transferfrom" value="Checking" checked> Checking Account<br>
+                <input type="radio" name="transferfrom" value="#{checkingAccount._id}" checked> Checking Account<br>
                 p Balance: $#{checkingAccount.balance}
             if savingAccount
-                <input type="radio" name="transferfrom" value="Saving"> Saving Account<br>
+                <input type="radio" name="transferfrom" value="#{savingAccount._id}"> Saving Account<br>
                 p Balance: $#{savingAccount.balance}
                 <br><br>
                 
             h3 Please choose a account you want to transfer money to
             if checkingAccount
-                <input type="radio" name="transferto" value="Checking" checked> Checking Account <br>
+                <input type="radio" name="transferto" value="#{checkingAccount._id}" checked> Checking Account <br>
                 p Balance: $#{checkingAccount.balance} 
             if savingAccount
-                <input type="radio" name="transferto" value="Saving"> Saving Account<br>
+                <input type="radio" name="transferto" value="#{savingAccount._id}"> Saving Account<br>
                 p Balance: $#{savingAccount.balance}
             if creditAccount
-                <input type="radio" name="transferto" value="Credit"> Credit Account<br>
+                <input type="radio" name="transferto" value="#{creditAccount._id}"> Credit Account<br>
                 p Balance: $#{creditAccount.balance}
                 <br>
                 
