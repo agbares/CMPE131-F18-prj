@@ -22,7 +22,6 @@ router.get('/', auth.isAuthenticated, function(req, res) {
     if(err){
       console.log(err);
     }
-    //console.log(accounts);
     
     for(var i = 0; i < accounts.length; i++)
     {
@@ -39,7 +38,6 @@ router.get('/', auth.isAuthenticated, function(req, res) {
         console.log('No Accounts');
       }
     }
-    // console.log(accountObj.checkingAccount);
     res.render('dashboard/index', accountObj);
   })
 });
@@ -85,8 +83,6 @@ router.post('/transfer', function(req, res, next){
   {
     req.flash('error', 'Amount is negative.');
     return res.redirect('transfer');
-    // console.log('Amount is negative.');
-    // res.render('/transfer');
   }
   res.render('dashboard/transfer');
 })
