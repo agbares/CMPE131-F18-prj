@@ -70,6 +70,7 @@ router.get('/transfer', auth.isAuthenticated, function(req, res, next) {
     next(err);
   });
 });
+
 router.post('/transfer', function(req, res, next){
   const transferAmount = req['body']['transferamount']; //Getting the amount from the user.
   const transferFrom = req['body']['transferfrom']; //Getting the radio choice. 
@@ -103,8 +104,6 @@ function transferMoney(temp_transfer_amount, temp_transfer_from, temp_transfer_t
       console.log("Can't transfer money in the same account."); //"Same Account" as in transferring from savings to savings, checkings to checkings, etc. 
     }
 
-    
-
     for(var i = 0; i < accounts.length; i++){
       console.log(accounts[i].type);
       console.log(temp_transfer_to);
@@ -112,6 +111,7 @@ function transferMoney(temp_transfer_amount, temp_transfer_from, temp_transfer_t
       if(accounts[i].type == temp_transfer_from){
         for(var j = 0; j < accounts.length; j++){
           if(accounts[j].type == temp_transfer_to){
+
             accounts[i].balance -= temp_transfer_amount;
             tempAmountHold = parseInt(accounts[j].balance) + parseInt(temp_transfer_amount);
             accounts[j].balance = tempAmountHold;
