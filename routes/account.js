@@ -20,5 +20,6 @@ router.get('/:accountId', auth.isAuthenticated, auth.accountBelongsToUser, funct
     next(err);
   });
 });
+
 /* Export Module */
 module.exports = router;
