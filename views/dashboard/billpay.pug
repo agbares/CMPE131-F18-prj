@@ -71,6 +71,46 @@ html
           <input type="reset">
       </form>
 
+      br
+      br
+      br
+      h2 Dear customer, you can schedule a peyment here. 
+
+      <form>
+          p Please choose a account you want to pay the bill with
+          if checkingAccount
+            <input type="radio" name="paywith" value="Checking" checked> Checking Account <br>
+            p Balance: $#{checkingAccount.balance} 
+          if savingAccount
+            <input type="radio" name="paywith" value="Saving"> Saving Account<br>
+            p Balance: $#{savingAccount.balance}
+          if creditAccount
+            <input type="radio" name="paywith" value="Credit"> Credit Account<br>
+            p Balance: $#{creditAccount.balance}
+            <br>
+
+          p Please enter the amount:
+          <input type="number" name="payamount" ><br>
+          br
+
+          p Please enter the month:
+          <input type="number" name="month" ><br>
+          br
+          p Please enter the day:
+          <input type="number" name="day" ><br>
+          br
+          p Please enter the year:
+          <input type="number" name="year" ><br>
+          br
+
+          p Please add a note:
+          <input type="text" name="paynote" ><br>
+          <br>
+          <input type="submit" value="Submit">
+          <input type="reset">
+      </form>
+
+
     br
     br
     br
