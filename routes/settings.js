@@ -12,12 +12,18 @@ var User = require('../models/user');
 /* Routes */
 router.get('/', auth.isAuthenticated, function(req, res) {
 
-  // res.render();
-  res.send('Settings Page'); // Remove when using res.render()
+  res.render('dashboard/settings');
+  // res.send('Settings Page'); // Remove when using res.render()
 });
 
 router.get('/change-password', auth.isAuthenticated, function(req, res) {
-  
+  //put the new fields on here
+  // res.render();
+  res.send('Change Password Page'); // Remove when using res.render()
+});
+
+router.post('/change-password', auth.isAuthenticated, function(req, res) {
+  //put the new fields on here
   // res.render();
   res.send('Change Password Page'); // Remove when using res.render()
 });

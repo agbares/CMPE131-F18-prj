@@ -22,7 +22,6 @@ router.get('/', auth.isAuthenticated, function(req, res) {
     if(err){
       console.log(err);
     }
-    console.log(accounts);
     
     for(var i = 0; i < accounts.length; i++)
     {
@@ -39,7 +38,6 @@ router.get('/', auth.isAuthenticated, function(req, res) {
         console.log('No Accounts');
       }
     }
-    console.log(accountObj.checkingAccount);
     res.render('dashboard/index', accountObj);
   })
 });
@@ -66,6 +64,28 @@ router.get('/transfer', auth.isAuthenticated, function(req, res, next) {
     
     res.render('dashboard/transfer', accountObj);
 
+  }).catch((err) => {
+    next(err);
+  });
+});
+
+router.post('/transfer', function(req, res, next){
+  const transferAmount = req['body']['transferamount']; //Getting the amount from the user.
+  const transferFrom = req['body']['transferfrom']; //Getting the radio choice. 
+  const transferTo = req['body']['transferto']; //Getting the radio choice.
+  const email = req['body']['email'];
+
+  if (transferTo == 'email')
+    transferTo = email;
+
+  Account.transfer(transferFrom, transferTo, transferAmount).then((response) => {
+    if (response.errorMessage !== null) {
+      req.flash('error', response.errorMessage);
+      return res.redirect('transfer');
+    }
+
+    return res.redirect('transfer');
+    
   }).catch((err) => {
     next(err);
   });
