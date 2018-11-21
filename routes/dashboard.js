@@ -80,8 +80,8 @@ router.post('/transfer', function(req, res, next){
   }
 
   if(validAmount(transferAmount) == true){
-    transferMoney(transferAmount, transferFrom, transferTo, req.user._id);
-  
+    var transferMoney_Response = transferMoney(transferAmount, transferFrom, transferTo, req.user._id, req, res);
+    return transferMoney_Response;
   }
   else
   {
@@ -89,11 +89,11 @@ router.post('/transfer', function(req, res, next){
     return res.redirect('transfer');
   }
   
-  res.render('dashboard/transfer');
+  //res.render('dashboard/transfer');
 })
 
-function transferMoney(temp_transfer_amount, temp_transfer_from, temp_transfer_to, user_ID){ //A function where the transferring will be happening. 
-  Account.find({user_ID: user_ID}, function(err, accounts){
+function transferMoney(temp_transfer_amount, temp_transfer_from, temp_transfer_to, user_ID, request, response){ //A function where the transferring will be happening. 
+  Account.find({user_ID: user_ID}, (err, accounts) => {
     if(err){
       console.log(err);
     }
@@ -101,39 +101,41 @@ function transferMoney(temp_transfer_amount, temp_transfer_from, temp_transfer_t
 
     for(var i = 0; i < accounts.length; i++){
       if(accounts[i].type == temp_transfer_from){
+        console.log('Hi');
         for(var j = 0; j < accounts.length; j++){
           if(accounts[j].type == temp_transfer_to){
-
+            console.log('My name is Jason');
             accounts[i].balance -= temp_transfer_amount;
             tempAmountHold = parseInt(accounts[j].balance) + parseInt(temp_transfer_amount);
             accounts[j].balance = tempAmountHold;
             var accountsChecking = accounts[i];
             var accountsSaving = accounts[j];
-            accountsChecking.save(function(err, res){
-              if(err){
-                console.log(err);
+            accountsChecking.save(function(error, res){
+              if(error){
+                console.log(error);
               }
             })
 
-            accountsSaving.save(function(err, res){
-              if(err){
-                console.log(err);
+            accountsSaving.save(function(error, res){
+              if(error){
+                console.log(error);
               }
             })
+            return response.redirect('/dashboard');
           }
-           else{
-            console.log('Not the correct account.');
+           else if(j == accounts.length - 1){
+            console.log('Not the correct account. 2');
+            request.flash('error', 'Not the correct account');
+            return response.redirect('transfer');
            }
         }
       }
-       else{
-        console.log('Not the correct account.');
+       else if(i == accounts.length - 1){
+        console.log('Not the correct account. 1');
+        request.flash('error', 'Not the correct account');
+        return response.redirect('transfer');
        }
     }
-  }
-  ,function(req,res){
-    req.flash('error', 'Could not find the account you have selected.');
-    return res.redirect('transfer');
   })
 }
 
