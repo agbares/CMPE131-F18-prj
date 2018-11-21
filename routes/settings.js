@@ -12,8 +12,8 @@ var User = require('../models/user');
 /* Routes */
 router.get('/', auth.isAuthenticated, function(req, res) {
 
-  // res.render();
-  res.send('Settings Page'); // Remove when using res.render()
+  res.render('dashboard/settings');
+  // res.send('Settings Page'); // Remove when using res.render()
 });
 
 router.get('/change-password', auth.isAuthenticated, function(req, res) {
