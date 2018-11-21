@@ -6,6 +6,7 @@
 /* Dependencies */
 const mongoose = require('mongoose');
 const ObjectID = require('mongodb').ObjectID;
+const User = require('./user');
 
 /* Schema */
 var accountSchema = mongoose.Schema({
@@ -83,15 +84,34 @@ accountSchema.statics.transfer = async function(from, to, amount) {
     errorMessage: null
   };
 
-  // Check validity of IDs
-  if (!ObjectID.isValid(from) || !ObjectID.isValid(to)) {
+  // Check validity of from ID
+  if (!ObjectID.isValid(from)) {
     response.errorMessage = 'Invalid account ID';
     return response;
   }
 
   // Fetch accounts
   const fromAccount = await this.findOne({_id: from});
-  const toAccount = await this.findOne({_id: to});
+  var toAccount;
+
+  if (ObjectID.isValid(to)) {
+    // This account is from an account ID
+    toAccount = await this.findOne({_id: to});
+
+  } else {
+    // Fetch checkings account from user
+    const externalUser = await User.getUser(to);
+    
+    // User does not exist
+    if (externalUser === null) {
+      response.errorMessage = 'Account with email: ' + to + ' does not exist';
+      return response;
+    }
+
+    // Fetch the checkings
+    toAccount = await this.findOne({user_ID: externalUser._id, type: 'checking'});
+  }
+  
 
   // Check if accounts exist
   if (fromAccount === null || toAccount === null) {
