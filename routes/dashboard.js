@@ -101,10 +101,8 @@ function transferMoney(temp_transfer_amount, temp_transfer_from, temp_transfer_t
 
     for(var i = 0; i < accounts.length; i++){
       if(accounts[i].type == temp_transfer_from){
-        console.log('Hi');
         for(var j = 0; j < accounts.length; j++){
           if(accounts[j].type == temp_transfer_to){
-            console.log('My name is Jason');
             accounts[i].balance -= temp_transfer_amount;
             tempAmountHold = parseInt(accounts[j].balance) + parseInt(temp_transfer_amount);
             accounts[j].balance = tempAmountHold;

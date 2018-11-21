@@ -84,6 +84,62 @@ router.post('/change-password', auth.isAuthenticated, function(req, res, next) {
 router.post('/close-account'), auth.isAuthenticated, function(req, res, next){
   const closeAcc = req['body']['account-id'];
 
+  (async function() {
+    var acc = await Account.getAccount(closeAcc)
+    .then((acc)=>{
+      if(acc.type == 'credit'){
+        if(acc.balance > 0){
+          request.flash('error', 'You still owe money for your credit account. ');
+          return res.redirect('close-account');
+        }
+        else{
+          return Account.findByIdAndRemove(closeAcc);
+        }
+      }
+      else if(acc.type == 'saving'){
+        if(acc.balance == 0){
+          return Account.findByIdAndRemove(closeAcc)
+        }
+        else{
+          var checking_acc = Account.findOne({user_ID: req.user._id, type: 'checking'});
+          checking_acc.balance = parseInt(checking_acc.balance) + parseInt(acc.balance);
+          return Account.findByIdAndRemove(closeAcc);
+        }
+      }
+    })
+
+  })().then((res) => {
+
+  }).catch((err) => {
+    next(err);
+  })
+
+  // Account.getAccount(closeAcc)
+  // .then((acc)=>{
+  //   if(acc.type == 'credit'){
+  //     if(acc.balance > 0){
+  //       request.flash('error', 'You still owe money for your credit account. ');
+  //       return res.redirect('close-account');
+  //     }
+  //     else{
+  //       return Account.findByIdAndRemove(closeAcc);
+  //     }
+  //   }
+  //   else if(acc.type == 'saving'){
+  //     if(acc.balance == 0){
+  //       return Account.findByIdAndRemove(closeAcc)
+  //     }
+  //     else{
+  //       Account.findOne({})
+  //     }
+  //   }
+  // })
+  // .then((acc) => {
+  //   res.redirect('/dashboard');
+  // })
+  // .catch((err) => {
+  //   next(err);
+  // })
 }
 
 router.post('/close-user'), auth.isAuthenticated, function(req, res, next){
