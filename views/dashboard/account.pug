@@ -44,6 +44,15 @@ body
 							th Date
 							th Description
 							th Amount
+						
+						if transactions
+							each transaction in transactions
+								tr
+									td transaction.timestamp
+									td transaction.description
+									td transaction.amount
+						else
+							div No transactions found
 			div(class="col-sm-2")
 	
 	script $.backstretch("img/SJSU_campus.jpg");
