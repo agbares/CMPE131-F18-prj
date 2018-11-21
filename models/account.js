@@ -7,6 +7,7 @@
 const mongoose = require('mongoose');
 const ObjectID = require('mongodb').ObjectID;
 const User = require('./user');
+const Transaction = require('./transaction');
 
 /* Schema */
 var accountSchema = mongoose.Schema({
@@ -112,7 +113,6 @@ accountSchema.statics.transfer = async function(from, to, amount) {
     toAccount = await this.findOne({user_ID: externalUser._id, type: 'checking'});
   }
   
-
   // Check if accounts exist
   if (fromAccount === null || toAccount === null) {
     response.errorMessage = 'Account does not exist';
@@ -128,6 +128,9 @@ accountSchema.statics.transfer = async function(from, to, amount) {
   // Make the transfer
   response.from = await fromAccount.deposit(amount * -1);
   response.to = await toAccount.deposit(amount);
+
+  await Transaction.createTransaction(response.from._id, response.to._id, 'Transfer', `Money transfer to ${response.to._id}`, (amount * -1), 'Processed');
+  await Transaction.createTransaction(response.to._id, response.from._id, 'Transfer', `Money transfer from ${response.from._id}`, amount, 'Processed');
 
   return response;
 }
