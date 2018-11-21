@@ -5,6 +5,7 @@
 
 /* Dependencies */
 const mongoose = require('mongoose');
+const ObjectID = require('mongodb').ObjectID;
 
 /* Schema */
 var accountSchema = mongoose.Schema({
@@ -17,6 +18,17 @@ var accountSchema = mongoose.Schema({
 });
 
 /* Methods */
+
+/**
+ * Deposits an amount to an account's balance.
+ * @function deposit
+ * @param {Number} amount - Amount to be deposited.
+ * @returns {Promise} - Promise object that represents the response.
+ */
+accountSchema.methods.deposit = async function(amount) {
+  this.balance += amount;
+  return await this.save();
+}
 
 /* Statics */
 
@@ -52,6 +64,52 @@ accountSchema.statics.belongsToUser = async function(account_ID, user_ID) {
     return false;
 
   return true;
+}
+
+/**
+ * Transfers an amount from one account to another. Does not allow transfer amounts greater than the
+ * balance available in the from account.
+ * @function transfer
+ * @param {string} from - The ID of the source account.
+ * @param {string} to - The ID of the destination account.
+ * @param {number} amount - The amount to transfer.
+ * @returns {Promise}
+ */
+accountSchema.statics.transfer = async function(from, to, amount) {
+  // Response object
+  var response = {
+    from: null,
+    to: null,
+    errorMessage: null
+  };
+
+  // Check validity of IDs
+  if (!ObjectID.isValid(from) || !ObjectID.isValid(to)) {
+    response.errorMessage = 'Invalid account ID';
+    return response;
+  }
+
+  // Fetch accounts
+  const fromAccount = await this.findOne({_id: from});
+  const toAccount = await this.findOne({_id: to});
+
+  // Check if accounts exist
+  if (fromAccount === null || toAccount === null) {
+    response.errorMessage = 'Account does not exist';
+    return response;
+  }
+
+  // Check for valid amount
+  if (amount > fromAccount.balance) {
+    response.errorMessage = 'Amount is greater than the available balance.'
+    return response;
+  }
+
+  // Make the transfer
+  response.from = await fromAccount.deposit(amount * -1);
+  response.to = await toAccount.deposit(amount);
+
+  return response;
 }
 
 /* Export Module as a Mongoose Model*/
