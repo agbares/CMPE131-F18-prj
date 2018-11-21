@@ -73,78 +73,23 @@ router.post('/transfer', function(req, res, next){
   const transferAmount = req['body']['transferamount']; //Getting the amount from the user.
   const transferFrom = req['body']['transferfrom']; //Getting the radio choice. 
   const transferTo = req['body']['transferto']; //Getting the radio choice.
+  const email = req['body']['email'];
 
-  if(transferFrom == transferTo){
-    req.flash('error', "Can't transfer money in the same account.");
-    return res.redirect('transfer');
-  }
+  if (transferTo == 'email')
+    transferTo = email;
 
-  if(validAmount(transferAmount) == true){
-    var transferMoney_Response = transferMoney(transferAmount, transferFrom, transferTo, req.user._id, req, res);
-    return transferMoney_Response;
-  }
-  else
-  {
-    req.flash('error', 'Amount is negative.');
-    return res.redirect('transfer');
-  }
-  
-  //res.render('dashboard/transfer');
-})
-
-function transferMoney(temp_transfer_amount, temp_transfer_from, temp_transfer_to, user_ID, request, response){ //A function where the transferring will be happening. 
-  Account.find({user_ID: user_ID}, (err, accounts) => {
-    if(err){
-      console.log(err);
+  Account.transfer(transferFrom, transferTo, transferAmount).then((response) => {
+    if (response.errorMessage !== null) {
+      req.flash('error', response.errorMessage);
+      return res.redirect('transfer');
     }
-    var tempAmountHold = 0;
 
-    for(var i = 0; i < accounts.length; i++){
-      if(accounts[i].type == temp_transfer_from){
-        for(var j = 0; j < accounts.length; j++){
-          if(accounts[j].type == temp_transfer_to){
-            accounts[i].balance -= temp_transfer_amount;
-            tempAmountHold = parseInt(accounts[j].balance) + parseInt(temp_transfer_amount);
-            accounts[j].balance = tempAmountHold;
-            var accountsChecking = accounts[i];
-            var accountsSaving = accounts[j];
-            accountsChecking.save(function(error, res){
-              if(error){
-                console.log(error);
-              }
-            })
-
-            accountsSaving.save(function(error, res){
-              if(error){
-                console.log(error);
-              }
-            })
-            return response.redirect('/dashboard');
-          }
-           else if(j == accounts.length - 1){
-            console.log('Not the correct account. 2');
-            request.flash('error', 'Not the correct account');
-            return response.redirect('transfer');
-           }
-        }
-      }
-       else if(i == accounts.length - 1){
-        console.log('Not the correct account. 1');
-        request.flash('error', 'Not the correct account');
-        return response.redirect('transfer');
-       }
-    }
-  })
-}
-
-function validAmount(amount){ //Helper function to see if the user put in a positive amount. 
-  if(amount > 0){
-    return true;
-  }
-  else{
-    return false;
-  }
-}
+    return res.redirect('transfer');
+    
+  }).catch((err) => {
+    next(err);
+  });
+});
 
 router.get('/billpay', auth.isAuthenticated, function(req, res, next) {
   var accountObj = {

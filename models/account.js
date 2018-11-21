@@ -6,6 +6,8 @@
 /* Dependencies */
 const mongoose = require('mongoose');
 const ObjectID = require('mongodb').ObjectID;
+const User = require('./user');
+const Transaction = require('./transaction');
 
 /* Schema */
 var accountSchema = mongoose.Schema({
@@ -83,16 +85,34 @@ accountSchema.statics.transfer = async function(from, to, amount) {
     errorMessage: null
   };
 
-  // Check validity of IDs
-  if (!ObjectID.isValid(from) || !ObjectID.isValid(to)) {
+  // Check validity of from ID
+  if (!ObjectID.isValid(from)) {
     response.errorMessage = 'Invalid account ID';
     return response;
   }
 
   // Fetch accounts
   const fromAccount = await this.findOne({_id: from});
-  const toAccount = await this.findOne({_id: to});
+  var toAccount;
 
+  if (ObjectID.isValid(to)) {
+    // This account is from an account ID
+    toAccount = await this.findOne({_id: to});
+
+  } else {
+    // Fetch checkings account from user
+    const externalUser = await User.getUser(to);
+    
+    // User does not exist
+    if (externalUser === null) {
+      response.errorMessage = 'Account with email: ' + to + ' does not exist';
+      return response;
+    }
+
+    // Fetch the checkings
+    toAccount = await this.findOne({user_ID: externalUser._id, type: 'checking'});
+  }
+  
   // Check if accounts exist
   if (fromAccount === null || toAccount === null) {
     response.errorMessage = 'Account does not exist';
@@ -108,6 +128,9 @@ accountSchema.statics.transfer = async function(from, to, amount) {
   // Make the transfer
   response.from = await fromAccount.deposit(amount * -1);
   response.to = await toAccount.deposit(amount);
+
+  await Transaction.createTransaction(response.from._id, response.to._id, 'Transfer', `Money transfer to ${response.to._id}`, (amount * -1), 'Processed');
+  await Transaction.createTransaction(response.to._id, response.from._id, 'Transfer', `Money transfer from ${response.from._id}`, amount, 'Processed');
 
   return response;
 }

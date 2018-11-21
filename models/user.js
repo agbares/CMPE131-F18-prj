@@ -124,5 +124,15 @@ userSchema.statics.createUser = async function(firstName, lastName, email, passw
   return await newUser.save();;
 }
 
+/**
+ * Finds a user with a given email.
+ * @function getUser
+ * @param {string} email
+ * @returns {User} - Found user object.
+ */
+userSchema.statics.getUser = async function(email) {
+  return await this.findOne({email: email});
+}
+
 /* Export Module as a Mongoose Model*/
 module.exports = mongoose.model('User', userSchema, 'User');
