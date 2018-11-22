@@ -35,6 +35,62 @@ accountSchema.methods.deposit = async function(amount) {
 /* Statics */
 
 /**
+ * Creates a new account.
+ * @function createAccount
+ * @param {ObjectID} user_ID
+ * @param {String} type
+ * @param {String} balance
+ * @param {Number} minimumDue
+ * @param {Number} limit
+ * @param {Number} paymentDate
+ * @returns {Promise}
+ */
+accountSchema.statics.createAccount = async function(user_ID, type, balance, minimumDue, limit, paymentDate) {
+  var newAccount = this({
+    user_ID: user_ID,
+    type: type,
+    balance: balance,
+    minimum_due: minimumDue,
+    limit: limit,
+    payment_date: paymentDate
+  });
+
+  return await newAccount.save();
+}
+
+/**
+ * Creates a new checking account.
+ * @function createChecking
+ * @param {ObjectID} user_ID
+ * @returns {Promise}
+ */
+accountSchema.statics.createChecking = async function(user_ID) {
+  return await this.createAccount(user_ID, 'checking', 0, null, null, null);
+}
+
+/**
+ * Creates a new saving account.
+ * @function createSaving
+ * @param {ObjectID} user_ID
+ * @returns {Promise}
+ */
+accountSchema.statics.createSaving = async function(user_ID) {
+  return await this.createAccount(user_ID, 'saving', 0, null, null, null);
+}
+
+/**
+ * Creates a new credit account.
+ * @function createCredit
+ * @param {ObjectID} user_ID
+ * @param {Number} limit
+ * @param {Number} paymentDate
+ * @returns {Promise}
+ */
+accountSchema.statics.createCredit = async function(user_ID, limit, paymentDate) {
+  return await this.createAccount(user_ID, 'credit', 0, 0, limit, paymentDate);
+}
+
+/**
  * Gets the account information of a specificed account ID.
  * @function getAccount
  * @param {string} account_ID - The ID of the requested account.
