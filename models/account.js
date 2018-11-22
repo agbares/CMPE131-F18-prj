@@ -167,6 +167,12 @@ accountSchema.statics.transfer = async function(from, to, amount) {
     errorMessage: null
   };
 
+  // Check for valid amount
+  if (amount <= 0) {
+    response.errorMessage = 'Amount must be greater than 0.'
+    return response;
+  }
+
   // Fetch accounts
   const fromAccount = await this.findOne({_id: from});
   var toAccount;
@@ -207,8 +213,12 @@ accountSchema.statics.transfer = async function(from, to, amount) {
   response.from = await fromAccount.deposit(amount * -1);
   response.to = await toAccount.deposit(amount);
 
-  await Transaction.createTransaction(response.from._id, response.to._id, 'Transfer', `Money transfer to ${response.to._id}`, (amount * -1), 'Processed');
-  await Transaction.createTransaction(response.to._id, response.from._id, 'Transfer', `Money transfer from ${response.from._id}`, amount, 'Processed');
+  // Mask the first 6 digits of the accounts
+  const fromID = response.from._id.replace(response.from._id.substring(0, response.from._id.length / 2), "xxxxxx");
+  const toID = response.to._id.replace(response.to._id.substring(0, response.to._id.length / 2), "xxxxxx");
+
+  await Transaction.createTransaction(response.from._id, response.to._id, 'Transfer', `Money transfer to ${toID}`, (amount * -1), 'Processed');
+  await Transaction.createTransaction(response.to._id, response.from._id, 'Transfer', `Money transfer from ${fromID}`, amount, 'Processed');
 
   return response;
 }
