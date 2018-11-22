@@ -6,11 +6,18 @@
 /* Dependencies */
 const mongoose = require('mongoose');
 const ObjectID = require('mongodb').ObjectID;
+const randomstring = require('randomstring');
+const uniqueValidator = require('mongoose-unique-validator');
 const User = require('./user');
 const Transaction = require('./transaction');
 
+/* Constants */
+const MAX_RETRIES = 5;
+
+
 /* Schema */
 var accountSchema = mongoose.Schema({
+    _id: String,
     user_ID: String,
     type: String,
     balance: Number,
@@ -18,6 +25,9 @@ var accountSchema = mongoose.Schema({
     limit: Number,
     payment_date: Number
 });
+
+/* Plugins */
+accountSchema.plugin(uniqueValidator);
 
 /* Methods */
 
@@ -47,6 +57,7 @@ accountSchema.methods.deposit = async function(amount) {
  */
 accountSchema.statics.createAccount = async function(user_ID, type, balance, minimumDue, limit, paymentDate) {
   var newAccount = this({
+    _id: randomstring.generate({length: 12, charset: 'numeric'}),
     user_ID: user_ID,
     type: type,
     balance: balance,
@@ -65,7 +76,12 @@ accountSchema.statics.createAccount = async function(user_ID, type, balance, min
  * @returns {Promise}
  */
 accountSchema.statics.createChecking = async function(user_ID) {
-  return await this.createAccount(user_ID, 'checking', 0, null, null, null);
+
+  var promise = Promise.reject();
+  for(var i = 0; i < MAX_RETRIES; i++)
+    promise = promise.catch(() => {return this.createAccount(user_ID, 'checking', 0, null, null, null)});
+  
+  return await promise.then((res) => {return res}).catch((res) => {return Promise.reject(res)});
 }
 
 /**
@@ -75,7 +91,12 @@ accountSchema.statics.createChecking = async function(user_ID) {
  * @returns {Promise}
  */
 accountSchema.statics.createSaving = async function(user_ID) {
-  return await this.createAccount(user_ID, 'saving', 0, null, null, null);
+
+  var promise = Promise.reject();
+  for(var i = 0; i < MAX_RETRIES; i++)
+    promise = promise.catch(() => {return this.createAccount(user_ID, 'saving', 0, null, null, null)});
+  
+  return await promise.then((res) => {return res}).catch((res) => {return Promise.reject(res)});
 }
 
 /**
@@ -87,7 +108,12 @@ accountSchema.statics.createSaving = async function(user_ID) {
  * @returns {Promise}
  */
 accountSchema.statics.createCredit = async function(user_ID, limit, paymentDate) {
-  return await this.createAccount(user_ID, 'credit', 0, 0, limit, paymentDate);
+
+  var promise = Promise.reject();
+  for(var i = 0; i < MAX_RETRIES; i++)
+    promise = promise.catch(() => {return this.createAccount(user_ID, 'credit', 0, 0, limit, paymentDate)});
+
+  return await promise.then((res) => {return res}).catch((res) => {return Promise.reject(res)});
 }
 
 /**
@@ -141,22 +167,18 @@ accountSchema.statics.transfer = async function(from, to, amount) {
     errorMessage: null
   };
 
-  // Check validity of from ID
-  if (!ObjectID.isValid(from)) {
-    response.errorMessage = 'Invalid account ID';
-    return response;
-  }
-
   // Fetch accounts
   const fromAccount = await this.findOne({_id: from});
   var toAccount;
 
-  if (ObjectID.isValid(to)) {
+  if (!isNaN(to)) {
     // This account is from an account ID
     toAccount = await this.findOne({_id: to});
 
   } else {
     // Fetch checkings account from user
+    
+    // This account is from an email
     const externalUser = await User.getUser(to);
     
     // User does not exist
@@ -168,7 +190,7 @@ accountSchema.statics.transfer = async function(from, to, amount) {
     // Fetch the checkings
     toAccount = await this.findOne({user_ID: externalUser._id, type: 'checking'});
   }
-  
+
   // Check if accounts exist
   if (fromAccount === null || toAccount === null) {
     response.errorMessage = 'Account does not exist';
