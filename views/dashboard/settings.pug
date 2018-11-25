@@ -38,7 +38,7 @@ html
 
     h2 Dear customer, you can change your password here. 
 
-    <form method='post' action='change-password'>
+    <form method='post' action='settings/change-password'>
     
         p Please enter your old password:<br>
         <input type="text" name="old-password">
@@ -59,14 +59,14 @@ html
 
     h2 Dear customer, you can close your accounts here.
     
-    <form method='post' action='close-account'>
+    <form method='post' action='settings/close-account'>
     if savingAccount
         p Click here to close your Saving Account. 
         input(type="hidden" value=`${savingAccount._id}`)
         <input type="submit" value="Submit">
     </form>
 
-    <form method='post' action='close-account'>
+    <form method='post' action='settings/close-account'>
     if creditAccount
         p Click here to close your Credit Account. 
         if creditAccount.balance == 0 
