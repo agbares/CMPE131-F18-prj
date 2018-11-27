@@ -72,7 +72,7 @@ router.get('/transfer', auth.isAuthenticated, function(req, res, next) {
 });
 
 router.post('/transfer', function(req, res, next){
-  const transferAmount = req['body']['transferamount']; //Getting the amount from the user.
+  const transferAmount = parseFloat(req['body']['transferamount']); //Getting the amount from the user.
   const transferFrom = req['body']['transferfrom']; //Getting the radio choice. 
   const transferTo = req['body']['transferto']; //Getting the radio choice.
   const email = req['body']['email'];
@@ -148,7 +148,7 @@ router.post('/billpay', auth.isAuthenticated, function(req, res, next) {
     }
 
     // Check input
-    if (isNaN(req.body.payamount) || parseInt(req.body.payamount) <= 0) { console.log('test')
+    if (isNaN(req.body.payamount) || parseFloat(req.body.payamount) <= 0) { console.log('test')
       req.flash('error', 'Amount must be a number greater than 0');
       console.error('invalid amount')
       return;
@@ -157,7 +157,7 @@ router.post('/billpay', auth.isAuthenticated, function(req, res, next) {
     const userId = req.user._id;
     const accountId = req.body.paywith;
     const billNumber = req.body.billnumber;
-    const balance = parseInt(req.body.payamount);
+    const balance = parseFloat(req.body.payamount);
     const note = (req.body.paynote.length === 0) ? '' : req.body.paynote;
 
     const billpay = await Billpay.createBillpay(userId, accountId, billNumber, balance, note, date, false);
@@ -179,7 +179,7 @@ router.get('/deposit', auth.isAuthenticated, function(req, res, next) {
     savingAccount: null,
     creditAccount: null
   }
-  
+
   Account.getAccounts(req.user._id).then((accounts) => {
     for(var i = 0; i < accounts.length; i++) {
       if(accounts[i].type == 'checking') {
@@ -203,7 +203,7 @@ router.get('/deposit', auth.isAuthenticated, function(req, res, next) {
 router.post('/deposit', auth.isAuthenticated, function(req, res, next) {
   const routing = req.body.routing
   const accountNumber = req.body['account-number'];
-  const amount = parseInt(req.body.amount);
+  const amount = parseFloat(req.body.amount);
   const imgBack = req.body['img-back'];
   const imgFront = req.body['img-front'];
 
