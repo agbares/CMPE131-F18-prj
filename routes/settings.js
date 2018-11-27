@@ -115,20 +115,22 @@ router.post('/close-account'), auth.isAuthenticated, function(req, res, next){
 }
 
 router.post('/close-user'), auth.isAuthenticated, function(req, res, next){
-  const closeUser = req['body']['user-id'];
+  //const closeUser = req['body']['user-id'];
   // (async function () {
   //   var user = await Account.getAccounts(closeUser);
   //   for(var i = 0; i < user.length; i++){
-  //     if(user[i] == 'checkings'){
+  //     if(user[i] == 'checking'){
   //       if(isEmptyBalance(user[i].balance) == true){
 
   //       }
   //     }
   //   }
   // })
-  
-  Account.getAccounts(closeUser)
+  var userID = req.user._id;
+  var account = null;
+  Account.getAccounts(userID)
   .then((res)=>{
+    account = res;
     for(var i = 0; i < res.length; i++){
       if(res[i] == 'checking'){ //Only checked for checkings in the first .then because a user will always have a checkings.
         if(hasBalance(res[i].balance) == true){
@@ -138,35 +140,23 @@ router.post('/close-user'), auth.isAuthenticated, function(req, res, next){
           return false;
         }
       }
-      else{
-        return true; //If there's no checkings then you return true because it's like the same thing as having
-                     //checkings >= 0. 
-      }
     }
+    return true; //If there's no checkings then you return true because it's like the same thing as having
+                 //checkings >= 0. 
   })
   .then((res)=>{
     if(res == true){
-      for(var i = 0; i < res.length; i++){
-        if(res[i] == 'saving'){
-          if(hasBalance(res[i].balance) == true){
+      for(var i = 0; i < account.length; i++){
+        if(account[i] == 'saving'){
+          if(hasBalance(account[i].balance) == true){
             return true;
           }
           else{
             return false;
           }
         }
-        // else if(res[i] == 'credit'){
-        //   if(res[i].balance == 0){
-        //     return true;
-        //   }
-        //   else{
-        //     return false;
-        //   }
-        // }
-        else{
-          return true; //This means there is no savings account which is fine. 
-        }
       }
+      return true;
     }
     else{
       return false;
@@ -174,9 +164,9 @@ router.post('/close-user'), auth.isAuthenticated, function(req, res, next){
   })
   .then((res)=>{
     if(res == true){
-      for(var i = 0; i < res.length; i++){
-        if(res[i] == 'credit'){
-          if(res[i].balance == 0){
+      for(var i = 0; i < account.length; i++){
+        if(account[i] == 'credit'){
+          if(account[i].balance == 0){
             //Account.findByIdAndDelete(closeUser);
             return res.redirect('/dashboard');
           }
@@ -184,20 +174,9 @@ router.post('/close-user'), auth.isAuthenticated, function(req, res, next){
             return res.redirect('close-user');
           }
         }
-        // else if(res[i] == 'saving'){
-        //   if(res[i].balance == 0){
-        //     //Account.findByIdAndDelete(closeUser);
-        //     return res.redirect('/dashboard');
-        //   }
-        //   else{
-        //     return res.redirect('close-user');
-        //   }
-        // }
-        else{ 
-          //Account.findByIdAndDelete(closeUser);
-          return res.redirect('/dashboard'); //This means that there isnt a "credit" which is fine. 
-        }
       }
+      //Account.findByIdAndDelete(closeUser);
+      return res.redirect('/dashboard'); //This means that there isnt a "credit" which is fine. 
     }
     else{
       return res.redirect('close-user');
