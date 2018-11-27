@@ -21,6 +21,8 @@ html
         ul(class="nav navbar-nav flex-fill justify-content-center")
           li(class="nav-item")
             a(class="nav-link" href="/dashboard") Dashboard
+          //li(class="nav-item")
+            //a(class="nav-link" href="./account") Account
           li(class="nav-item")
             a(class="nav-link" href="#") Make deposit
           li(class="nav-item")
@@ -66,7 +68,10 @@ html
                 <input type="radio" name="transferto" value="#{creditAccount._id}"> Credit Account<br>
                 p Balance: $#{creditAccount.balance}
                 <br>
-                
+            input(type="radio" name="transferto" value="email")
+            input(type="email" name="email" placeholder="Email")
+            br
+			
             h3 Please enter the amount: <br>
             <input type="number" name="transferamount" ><br>
             <input type="submit" value="Submit">
