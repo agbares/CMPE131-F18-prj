@@ -9,6 +9,7 @@ var router = express.Router();
 var auth = require('../middlewares/auth')
 var User = require('../models/user');
 var Account = require('../models/account');
+var Billpay = require('../models/billpay');
 
 /* Routes */
 router.get('/', auth.isAuthenticated, function(req, res) {
@@ -118,30 +119,56 @@ router.get('/billpay', auth.isAuthenticated, function(req, res, next) {
   });
 });
 
-router.get('/deposit', auth.isAuthenticated, function(req, res, next) {
-  var accountObj = {
-    checkingAccount: null,
-    savingAccount: null,
-    creditAccount: null
-  }
-
-  Account.getAccounts(req.user._id).then((accounts) => {
-    for(var i = 0; i < accounts.length; i++) {
-      if(accounts[i].type == 'checking') {
-        accountObj.checkingAccount = accounts[i];
-      
-      } else if(accounts[i].type == 'saving') {
-        accountObj.savingAccount = accounts[i];
-      
-      } else if(accounts[i].type == 'credit') {
-        accountObj.creditAccount = accounts[i];
+router.post('/billpay', auth.isAuthenticated, function(req, res, next) {
+  (async function() {
+    var date = new Date();
+    
+    // Instant
+    if (req.body.type === 'instant') {
+      date = Date.now() + 10000;
+    }
+    
+    // Scheduled
+    else if (req.body.type === 'scheduled') {
+      // Check input
+      if (isNaN(Date.parse(`${req.body.month} ${req.body.day} ${req.body.year}`))) {
+        req.flash('error', 'Invalid Date');
+        console.error('Invalid Date');
+        return;
       }
+      
+      // Check date
+      date = new Date(`${req.body.month} ${req.body.day} ${req.body.year}`);
+      if (date <= Date.now()) {
+        req.flash('error', 'Date must be greater than today\'s date');
+        console.error('Date must be greater than todays date');
+        return;
+      }  
     }
 
-    res.render('dashboard/deposit', accountObj);
+    // Check input
+    if (isNaN(req.body.payamount) || parseInt(req.body.payamount) <= 0) { console.log('test')
+      req.flash('error', 'Amount must be a number greater than 0');
+      console.error('invalid amount')
+      return;
+    }
+    
+    const userId = req.user._id;
+    const accountId = req.body.paywith;
+    const billNumber = req.body.billnumber;
+    const balance = parseInt(req.body.payamount);
+    const note = (req.body.paynote.length === 0) ? '' : req.body.paynote;
 
-  }).catch((err) => {
+    const billpay = await Billpay.createBillpay(userId, accountId, billNumber, balance, note, date, false);
+
+    return billpay;
+  })().then(response => {
+    res.redirect('billpay');
+
+  }).catch(err => {
     next(err);
+  
+
   });
 });
 

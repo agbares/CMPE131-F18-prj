@@ -43,30 +43,39 @@ html
     else 
       h2 Dear customer, you can pay your bill here. 
 
-      <form>
+      <form method="post">
           p Please enter the bill number:
           <input type="text" name="billnumber"><br>
           br
 
           p Please choose a account you want to pay the bill with
           if checkingAccount
-            <input type="radio" name="paywith" value="Checking" checked> Checking Account <br>
+            input(type="radio" name="paywith" value=`${checkingAccount._id}` checked) 
+            |  Checking Account
+            br
             p Balance: $#{checkingAccount.balance} 
+          
           if savingAccount
-            <input type="radio" name="paywith" value="Saving"> Saving Account<br>
+            input(type="radio" name="paywith" value=`${savingAccount._id}`)
+            |  Saving Account
+            br
             p Balance: $#{savingAccount.balance}
+          
           if creditAccount
-            <input type="radio" name="paywith" value="Credit"> Credit Account<br>
+            input(type="radio" name="paywith" value=`${creditAccount._id}`)
+            |  Credit Account
+            br
             p Balance: $#{creditAccount.balance}
             <br>
 
           p Please enter the amount:
-          <input type="number" name="payamount" ><br>
+          <input type="number" name="payamount" min="1"><br>
           br
 
           p Please add a note:
           <input type="text" name="paynote" ><br>
           <br>
+          <input type="hidden" name="type" value="instant">
           <input type="submit" value="Submit">
           <input type="reset">
       </form>
@@ -74,38 +83,52 @@ html
       br
       br
       br
-      h2 Dear customer, you can schedule a peyment here. 
+      h2 Dear customer, you can schedule a payment here. 
 
-      <form>
+      <form method="post">
+          p Please enter the bill number:
+          <input type="text" name="billnumber"><br>
+          br
           p Please choose a account you want to pay the bill with
+          
           if checkingAccount
-            <input type="radio" name="paywith" value="Checking" checked> Checking Account <br>
+            input(type="radio" name="paywith" value=`${checkingAccount._id}` checked) 
+            |  Checking Account
+            br
             p Balance: $#{checkingAccount.balance} 
+          
           if savingAccount
-            <input type="radio" name="paywith" value="Saving"> Saving Account<br>
+            input(type="radio" name="paywith" value=`${savingAccount._id}`)
+            |  Saving Account
+            br
             p Balance: $#{savingAccount.balance}
+          
           if creditAccount
-            <input type="radio" name="paywith" value="Credit"> Credit Account<br>
+            input(type="radio" name="paywith" value=`${creditAccount._id}`)
+            |  Credit Account
+            br
             p Balance: $#{creditAccount.balance}
             <br>
 
           p Please enter the amount:
-          <input type="number" name="payamount" ><br>
+          <input type="number" name="payamount" min="1"><br>
           br
 
           p Please enter the month:
-          <input type="number" name="month" ><br>
+          <input type="number" name="month" min="1" max="12"><br>
           br
           p Please enter the day:
-          <input type="number" name="day" ><br>
+          <input type="number" name="day" min="1" max="31"><br>
           br
           p Please enter the year:
-          <input type="number" name="year" ><br>
+          input(type="number" name="year" min=`${(new Date(Date.now())).getFullYear()}`)
+          <br>
           br
 
           p Please add a note:
           <input type="text" name="paynote" ><br>
           <br>
+          <input type="hidden" name="type" value="scheduled">
           <input type="submit" value="Submit">
           <input type="reset">
       </form>
