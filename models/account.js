@@ -38,7 +38,24 @@ accountSchema.plugin(uniqueValidator);
  * @returns {Promise} - Promise object that represents the response.
  */
 accountSchema.methods.deposit = async function(amount) {
+  if (amount < 0)
+    return Promise.reject(new Error('Amount deposited must be a value greater than or equal to 0'));
+
   this.balance += amount;
+  return await this.save();
+}
+
+/**
+ * Deducts an amount from an account's balance.
+ * @function deduct
+ * @param {Number} amount - Amount to be deducted.
+ * @returns {Promise} - Promise object that represents the response.
+ */
+accountSchema.methods.deduct = async function(amount) {
+  if (amount < 0)
+    return Promise.reject(new Error('Amount deducted must be a value greater than or equal to 0'));
+
+  this.balance -= amount;
   return await this.save();
 }
 
@@ -210,7 +227,7 @@ accountSchema.statics.transfer = async function(from, to, amount) {
   }
 
   // Make the transfer
-  response.from = await fromAccount.deposit(amount * -1);
+  response.from = await fromAccount.deduct(amount);
   response.to = await toAccount.deposit(amount);
 
   // Mask the first 6 digits of the accounts
