@@ -8,6 +8,13 @@ const mongoose = require('mongoose');
 
 /* Schema */
 var transactionSchema = mongoose.Schema({
+account_ID: String,
+merchant_name: String,
+type: String,
+description: String,
+amount: Number,
+status: String,
+timestamp: Number,
 
 });
 
@@ -23,7 +30,7 @@ var transactionSchema = mongoose.Schema({
  * @param {string} merchantName
  * @param {string} type
  * @param {string} description
- * @param {string} amount
+ * @param {Number} amount
  * @param {string} status
  * @returns {Promise} - Promise object that represents the response.
  */
@@ -31,10 +38,18 @@ transactionSchema.statics.createTransaction = async function(account_ID, merchan
 
   // Create new contact object based on schema and parameters
   var newTransaction = this({
+    account_ID: account_ID,
+    merchant_name: merchantName,
+    type: type,
+    description: description,
+    amount: amount,
+    status: status,
+    timestamp: Date.now()
 
   });
 
   // Save the transaction object
+  return await newTransaction.save();
 }
 
 /**
@@ -46,10 +61,7 @@ transactionSchema.statics.createTransaction = async function(account_ID, merchan
  */
 transactionSchema.statics.getTransactions = async function(account_ID, quantity) {
 
-  // Search in DB for the n most recent transactions belonging to the account
-  // Where n is the quantity supplied.
-
-  // Return the documents
+  return await this.find({account_ID: account_ID});
 }
 
 /* Export Module as a Mongoose Model*/
