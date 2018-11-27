@@ -74,7 +74,7 @@ router.get('/transfer', auth.isAuthenticated, function(req, res, next) {
 router.post('/transfer', function(req, res, next){
   const transferAmount = parseFloat(req['body']['transferamount']); //Getting the amount from the user.
   const transferFrom = req['body']['transferfrom']; //Getting the radio choice. 
-  const transferTo = req['body']['transferto']; //Getting the radio choice.
+  var transferTo = req['body']['transferto']; //Getting the radio choice.
   const email = req['body']['email'];
 
   if (transferTo == 'email')
