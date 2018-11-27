@@ -10,9 +10,13 @@ var flash = require('connect-flash');
 var app = express();
 var mongoose = require('mongoose');
 var dbConstants = require('./config/db_config');
+const Billpay = require('./models/billpay');
 
 const dbURI = `mongodb+srv://${dbConstants.DB_USER}:${dbConstants.DB_PASSWORD}@${dbConstants.DB_HOST}/${dbConstants.DB_NAME}`;
 mongoose.connect(dbURI);
+
+// Schedule all bill pay on server startup
+Billpay.scheduleAllBillpay().then(res => {console.log('Scheduling all bill pay')}).catch(err => {console.log(err)});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
