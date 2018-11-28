@@ -39,8 +39,9 @@ body
 					div(class="text-center") #{error}
 					div(class="form-group")
 						label(for=deposit-type) Deposit Type
-						input(type="radio" class="form-control" name="type" value="check" id="deposit-type")
-						input(type="radio" class="form-control" name="type" value="atm" id="deposity-type")
+						br
+						<input type="radio" name="type" value="check" id="deposit-type" checked> Check <br>
+						<input type="radio" name="type" value="atm" id="deposity-type"> ATM <br>
 					div(class="form-group")
 						label(for="routing") Routing #
 						input(type="text" class="form-control" name="routing" id="routing" placeholder="Routing #")
