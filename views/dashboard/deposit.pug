@@ -37,11 +37,23 @@ body
 		
 				form(method="post")
 					div(class="text-center") #{error}
-					div(class="form-group")
-						label(for=deposit-type) Deposit Type
+					div(class="form-group") 
+						| Deposit Type
 						br
-						<input type="radio" name="type" value="check" id="deposit-type" checked> Check <br>
-						<input type="radio" name="type" value="atm" id="deposity-type"> ATM <br>
+						<label for="deposit-check">
+							<input type="radio" name="type" value="check" id="deposit-check" checked> Check
+						br
+						<label for="deposit-atm">
+							<input type="radio" name="type" value="atm" id="deposit-atm"> ATM
+					div(class="form-group") 
+						| Deposit To 
+						br
+						<label for="deposit-checking">
+							<input type="radio" name="deposit-to" value="#{checkingAccount._id}" id="deposit-checking" checked> Checking ($#{checkingAccount.balance})
+						if savingAccount
+							br
+							<label for="deposit-saving">
+								<input type="radio" name="deposit-to" value="#{savingAccount._id}" id="deposit-saving"> Saving ($#{savingAccount.balance})
 					div(class="form-group")
 						label(for="routing") Routing #
 						input(type="text" class="form-control" name="routing" id="routing" placeholder="Routing #")
