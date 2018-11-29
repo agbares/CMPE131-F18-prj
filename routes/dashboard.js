@@ -77,11 +77,20 @@ router.post('/transfer', function(req, res, next){
   var transferTo = req['body']['transferto']; //Getting the radio choice.
   const email = req['body']['email'];
 
-  if (transferTo == 'email')
+  if (transferTo == 'email') {
     transferTo = email;
-
-  if(transferFrom == transferTo || email == req.user.email){
-    return res.redirect('transfer');
+    
+    // Check if trying to make an external transfer to their own account
+    if (email == req.user.email) {
+      req.flash('error', 'Cannot make an external transfer to your own account');
+      return res.redirect('transfer');
+    }
+  }
+  
+  // Check if transferring to the same account
+  if (transferFrom === transferTo) {
+    req.flash('error', 'Cannot transfer to the same account');
+    return res.redirect('transfer');  
   }
 
   Account.transfer(transferFrom, transferTo, transferAmount).then((response) => {
