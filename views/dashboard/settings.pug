@@ -11,7 +11,7 @@ html
     script(src="js/jquery.backstretch.min.js")
 
   body
-
+    <script>$.backstretch("img/orange0.jpg");</script>
     nav(class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top main-nav")
       button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar")
         span(class="navbar-toggler-icon")
@@ -76,7 +76,7 @@ html
             p Dear customer, you have to pay your credit card fully before closing it.
     </form>
 
-    <form method='post' action='close-account'>
+    <form method='post' action='close-user'>
     if creditAccount
         if creditAccount.balance == 0 
             p Click here to close your enter banking account at SFG. 
@@ -103,3 +103,5 @@ html
 
     p
       a(href="../sign-out") Sign Out
+
+    
