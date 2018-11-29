@@ -12,6 +12,7 @@ var Account = require('../models/account');
 
 /* Routes */
 router.get('/', auth.isAuthenticated, function(req, res) {
+  res.send(open new accounts)
   var accountObj = {
     checkingAccount: null,
     savingAccount: null,
