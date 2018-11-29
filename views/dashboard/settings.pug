@@ -62,7 +62,7 @@ html
     <form method='post' action='settings/close-account'>
     if savingAccount
         p Click here to close your Saving Account. 
-        input(type="hidden" value=`${savingAccount._id}`)
+        input(type="hidden" name="account-id" value=`${savingAccount._id}`)
         <input type="submit" value="Submit">
     </form>
 
@@ -70,7 +70,7 @@ html
     if creditAccount
         if creditAccount.balance == 0 
             p Click here to close your Credit Account. 
-            input(type="hidden" value=`${creditAccount._id}`)
+            input(type="hidden" name="account-id" value=`${creditAccount._id}`)
             <input type="submit" value="Submit">
         else
             p Dear customer, you have to pay your credit card fully before closing it.
