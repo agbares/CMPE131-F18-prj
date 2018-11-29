@@ -84,8 +84,8 @@ router.post('/change-password', auth.isAuthenticated, function(req, res, next) {
 router.post('/close-account'), auth.isAuthenticated, function(req, res, next){
   const closeAcc = req['body']['account-id'];
   (async function() {
-    var acc = await Account.getAccount(closeAcc)
-    .then((acc)=>{
+    var acc = await Account.getAccount(closeAcc);
+    //.then((acc)=>{
       if(acc.type == 'credit'){
         if(acc.balance > 0){
           request.flash('error', 'You still owe money for your credit account. ');
@@ -101,11 +101,11 @@ router.post('/close-account'), auth.isAuthenticated, function(req, res, next){
         }
         else{
           var checking_acc = Account.findOne({user_ID: req.user._id, type: 'checking'});
-          checking_acc.balance = parseInt(checking_acc.balance) + parseInt(acc.balance);
+          checking_acc.balance = parseFloat(checking_acc.balance) + parseFloat(acc.balance);
           return Account.findByIdAndRemove(closeAcc);
         }
       }
-    })
+    // })
 
   })().then((res) => {
 
@@ -115,7 +115,76 @@ router.post('/close-account'), auth.isAuthenticated, function(req, res, next){
 }
 
 router.post('/close-user'), auth.isAuthenticated, function(req, res, next){
+  //const closeUser = req['body']['user-id'];
+  // (async function () {
+  //   var user = await Account.getAccounts(closeUser);
+  //   for(var i = 0; i < user.length; i++){
+  //     if(user[i] == 'checking'){
+  //       if(isEmptyBalance(user[i].balance) == true){
 
+  //       }
+  //     }
+  //   }
+  // })
+  var userID = req.user._id;
+  var account = null;
+  Account.getAccounts(userID)
+  .then((res)=>{
+    account = res;
+    for(var i = 0; i < res.length; i++){
+      if(res[i] == 'checking'){ //Only checked for checkings in the first .then because a user will always have a checkings.
+        if(hasBalance(res[i].balance) == true){
+          return true;
+        }
+        else{
+          return false;
+        }
+      }
+    }
+    return true; //If there's no checkings then you return true because it's like the same thing as having
+                 //checkings >= 0. 
+  })
+  .then((res)=>{
+    if(res == true){
+      for(var i = 0; i < account.length; i++){
+        if(account[i] == 'saving'){
+          if(hasBalance(account[i].balance) == true){
+            return true;
+          }
+          else{
+            return false;
+          }
+        }
+      }
+      return true;
+    }
+    else{
+      return false;
+    }
+  })
+  .then((res)=>{
+    if(res == true){
+      for(var i = 0; i < account.length; i++){
+        if(account[i] == 'credit'){
+          if(account[i].balance == 0){
+            //Account.findByIdAndDelete(closeUser);
+            return res.redirect('/dashboard');
+          }
+          else{
+            return res.redirect('close-user');
+          }
+        }
+      }
+      //Account.findByIdAndDelete(closeUser);
+      return res.redirect('/dashboard'); //This means that there isnt a "credit" which is fine. 
+    }
+    else{
+      return res.redirect('close-user');
+    }
+  })
+  .catch((err)=>{
+    next(err);
+  })
 }
 
 function isEmpty(oldPass, newPass){
@@ -129,6 +198,15 @@ function isEmpty(oldPass, newPass){
 
 function samePass(oldPass, newPass){
   if(oldPass == newPass){
+    return true;
+  }
+  else{
+    return false;
+  }
+}
+
+function hasBalance(balance){
+  if(balance >= 0){
     return true;
   }
   else{

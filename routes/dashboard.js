@@ -80,6 +80,10 @@ router.post('/transfer', function(req, res, next){
   if (transferTo == 'email')
     transferTo = email;
 
+  if(transferFrom == transferTo || email == req.user.email){
+    return res.redirect('transfer');
+  }
+
   Account.transfer(transferFrom, transferTo, transferAmount).then((response) => {
     if (response.errorMessage !== null) {
       req.flash('error', response.errorMessage);
