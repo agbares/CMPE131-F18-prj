@@ -11,13 +11,13 @@ var User = require('../models/user');
 var Account = require('../models/account');
 
 /* Routes */
-router.get('/', auth.isAuthenticated, function(req, res) {
-  res.send(open new accounts)
+router.get('/new-account/:account-type', auth.isAuthenticated, function(req, res) {
   var accountObj = {
     checkingAccount: null,
     savingAccount: null,
     creditAccount: null
   }
+
   
   Account.find({user_ID: req.user._id}, function(err, accounts){
     if(err){
