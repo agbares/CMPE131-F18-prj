@@ -9,6 +9,7 @@ var router = express.Router();
 var auth = require('../middlewares/auth');
 var User = require('../models/user');
 var Account = require('../models/account');
+var Transaction = require('../models/transaction');
 
 /* Routes */
 router.get('/', auth.isAuthenticated, function(req, res) {
@@ -49,22 +50,25 @@ router.post('/change-password', auth.isAuthenticated, function(req, res, next) {
   const newPass = req['body']['new-password'];
   const confirmNewPass = req['body']['confirm-new-password'];
 
-  if(isEmpty == true){
-    request.flash('error', 'A field is empty. ');
-    return res.redirect('change-password');
+  if(isEmpty(oldPass, newPass) == true){
+    req.flash('error', 'A field is empty. ');
+    //return res.redirect('change-password');
+    return res.redirect('/dashboard/settings');
   }
 
-  if(samePass == true){
-    request.flash('error', 'Old password and new password is the same. ');
-    return res.redirect('change-password');
+  if(samePass(oldPass, newPass) == true){
+    req.flash('error', 'Old password and new password is the same. ');
+    // return res.redirect('change-password');
+    return res.redirect('/dashboard/settings');
   }
 
   if(newPass == confirmNewPass){
     req.user.changePassword(oldPass, newPass)
     .then((response)=>{
       if(response == false){
-        request.flash('error', 'Password does not match your current password. ');
-        return res.redirect('change-password');
+        req.flash('error', 'Password does not match your current password. ');
+        //return res.redirect('change-password');
+        return res.redirect('/dashboard/settings');
       }
       else{
         return res.redirect('/dashboard');
@@ -76,45 +80,49 @@ router.post('/change-password', auth.isAuthenticated, function(req, res, next) {
   }
 
   else{
-    request.flash('error', 'New password confirmation is wrong. ');
-    return res.redirect('change-password');
+    req.flash('error', 'New password confirmation is wrong. ');
+    //return res.redirect('change-password');
+    return res.redirect('/dashboard/settings');
   }
 });
 
-router.post('/close-account'), auth.isAuthenticated, function(req, res, next){
+
+router.post('/close-account', auth.isAuthenticated, function(req, res, next){
   const closeAcc = req['body']['account-id'];
   (async function() {
     var acc = await Account.getAccount(closeAcc);
-    //.then((acc)=>{
       if(acc.type == 'credit'){
         if(acc.balance > 0){
           request.flash('error', 'You still owe money for your credit account. ');
-          return res.redirect('close-account');
+          return res.redirect('/dashboard/settings');
         }
         else{
-          return Account.findByIdAndRemove(closeAcc);
+          // await Account.findByIdAndRemove(closeAcc);
+          return res.redirect('/dashboard');
         }
       }
       else if(acc.type == 'saving'){
         if(acc.balance == 0){
-          return Account.findByIdAndRemove(closeAcc)
+          return res.redirect('/dashboard');
+          //return Account.findByIdAndRemove(closeAcc)
         }
         else{
-          var checking_acc = Account.findOne({user_ID: req.user._id, type: 'checking'});
-          checking_acc.balance = parseFloat(checking_acc.balance) + parseFloat(acc.balance);
-          return Account.findByIdAndRemove(closeAcc);
+          var checking_acc = await Account.findOne({user_ID: req.user._id, type: 'checking'}).exec();
+          // checking_acc.balance = parseFloat(checking_acc.balance) + parseFloat(acc.balance);
+          await Account.transfer(acc._id, checking_acc._id, acc.balance);
+          // await checking_acc.save();
+          //await Account.findByIdAndRemove(closeAcc);
+          return res.redirect('/dashboard');
         }
       }
-    // })
-
   })().then((res) => {
 
   }).catch((err) => {
     next(err);
   })
-}
+});
 
-router.post('/close-user'), auth.isAuthenticated, function(req, res, next){
+router.post('/close-user', auth.isAuthenticated, function(req, res, next){
   //const closeUser = req['body']['user-id'];
   // (async function () {
   //   var user = await Account.getAccounts(closeUser);
@@ -185,7 +193,7 @@ router.post('/close-user'), auth.isAuthenticated, function(req, res, next){
   .catch((err)=>{
     next(err);
   })
-}
+});
 
 function isEmpty(oldPass, newPass){
   if(oldPass.length == 0 || newPass.length == 0){
