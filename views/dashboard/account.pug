@@ -2,7 +2,7 @@ doctype html
 html(lang="en")
 
 head
-	title Dashboard
+	title Account
 	meta(charset="utf-8")
 	meta(name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no")
 	link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css")
@@ -31,7 +31,7 @@ body
 				li(class="nav-item")
 					a(class="nav-link" href="../settings") Setting
 				li(class="nav-item")
-					a(class="nav-link" href="#") Find nearest ATM
+					a(class="nav-link" href="/find-atm") Find nearest ATM
 				li(class="nav-item")
 					a(class="nav-link" href="../../sign-out") Sign Out
 	br
@@ -56,11 +56,18 @@ body
 						if transactions
 							each transaction in transactions
 								tr
-									td #{transaction.timestamp}
+									td #{(new Date(transaction.timestamp)).toDateString()} #{(new Date(transaction.timestamp)).toLocaleTimeString()}
 									td #{transaction.description}
-									td #{transaction.amount}
+									if(Math.sign(transaction.amount) == -1)
+										td(align="right") -$#{parseFloat(Math.round(transaction.amount * 100) / 100 * -1).toFixed(2)}
+									else
+										td(align="right") $#{parseFloat(Math.round(transaction.amount * 100) / 100).toFixed(2)}
 						else
 							div No transactions found
+				<br><br>
+				p
+					a(href="/dashboard") Return to Dashboard
+					br
+					a(href="../sign-out") Sign Out
+
 			div(class="col-sm-2")
-	
-	script $.backstretch("img/SJSU_campus.jpg");

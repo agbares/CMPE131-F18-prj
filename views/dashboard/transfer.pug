@@ -21,16 +21,14 @@ html
         ul(class="nav navbar-nav flex-fill justify-content-center")
           li(class="nav-item")
             a(class="nav-link" href="/dashboard") Dashboard
-          //li(class="nav-item")
-            //a(class="nav-link" href="./account") Account
           li(class="nav-item")
-            a(class="nav-link" href="#") Make deposit
+            a(class="nav-link" href="./deposit") Make deposit
           li(class="nav-item")
             a(class="nav-link" href="./billpay") Pay bill
           li(class="nav-item")
-            a(class="nav-link" href="#") Setting
+            a(class="nav-link" href="./settings") Setting
           li(class="nav-item")
-            a(class="nav-link" href="#") Find nearest ATM
+            a(class="nav-link" href="/find-atm") Find nearest ATM
           li(class="nav-item")
             a(class="nav-link" href="../sign-out") Sign Out
     br
@@ -73,7 +71,7 @@ html
             br
 			
             h3 Please enter the amount: <br>
-            <input type="number" name="transferamount" ><br>
+            <input type="number" name="transferamount" step="0.01" ><br>
             <input type="submit" value="Submit">
         </form>
 
@@ -85,3 +83,5 @@ html
 
     p
       a(href="../sign-out") Sign Out
+
+    

@@ -77,11 +77,20 @@ router.post('/transfer', function(req, res, next){
   var transferTo = req['body']['transferto']; //Getting the radio choice.
   const email = req['body']['email'];
 
-  if (transferTo == 'email')
+  if (transferTo == 'email') {
     transferTo = email;
-
-  if(transferFrom == transferTo || email == req.user.email){
-    return res.redirect('transfer');
+    
+    // Check if trying to make an external transfer to their own account
+    if (email == req.user.email) {
+      req.flash('error', 'Cannot make an external transfer to your own account');
+      return res.redirect('transfer');
+    }
+  }
+  
+  // Check if transferring to the same account
+  if (transferFrom === transferTo) {
+    req.flash('error', 'Cannot transfer to the same account');
+    return res.redirect('transfer');  
   }
 
   Account.transfer(transferFrom, transferTo, transferAmount).then((response) => {
@@ -196,7 +205,7 @@ router.get('/deposit', auth.isAuthenticated, function(req, res, next) {
         accountObj.creditAccount = accounts[i];
       }
     }
-
+    console.log(req.flash('error')[0])
     res.render('dashboard/deposit', accountObj);
 
   }).catch((err) => {
@@ -204,37 +213,48 @@ router.get('/deposit', auth.isAuthenticated, function(req, res, next) {
   });
 });
 
-router.post('/deposit', auth.isAuthenticated, function(req, res, next) {
+router.post('/deposit', auth.isAuthenticated, function(req, res, next) {  
+  const type = req.body.type;
   const routing = req.body.routing
   const accountNumber = req.body['account-number'];
+  const accountNumberToDepositTo = req.body['deposit-to'];
   const amount = parseFloat(req.body.amount);
   const imgBack = req.body['img-back'];
   const imgFront = req.body['img-front'];
 
   (async () => {
-    /* Input validation */
+    if (type === 'check') {
+      /* Input validation */
+  
+      // We'll assume that some valid routing number has a length between 4 to 7; inclusive
+      if (routing.length > 17 || routing.length < 4 || isNaN(routing))
+        return req.flash('error', 'Invalid routing number');
+  
+      // We'll assume bank account numbers are at least 4 digits long
+      if (accountNumber.length < 4 || isNaN(accountNumber))
+        return req.flash('error', 'Invalid account number')
 
-    // We'll assume that some valid routing number has a length between 4 to 7; inclusive
-    if (routing.length > 17 || routing.length < 4)
-      return req.flash('error', 'Invalid routing number');
+      var account = await Account.getAccount(accountNumberToDepositTo);
+      
+      if (account === null)
+        return req.flash('error', 'Invalid account');
+      
+      if (amount <= 0 || isNaN(amount))
+        return req.flash('error', 'Amounts must be greater than 0');
+      
+      if (imgBack.length === 0 || imgFront.length === 0)
+        return req.flash('error', 'Check images are required.');
+      
+      if (imgBack === imgFront)
+        return req.flash('error', 'Check images provided are required.');
+  
+      // Deposit amount into account
+      await account.deposit(amount);
+      return await Transaction.createTransaction(account._id, 'SFG', 'Online Deposit', 'Online SFG deposit', amount, 'Processed');
 
-    var account = await Account.getAccount(accountNumber);
-    
-    if (account === null)
-      return req.flash('error', 'Invalid account');
-    
-    if (amount <= 0)
-      return req.flash('error', 'Amounts must be greater than 0');
-    
-    if (imgBack.length === 0 || imgFront.length === 0)
-      return req.flash('error', 'Check images are required.');
-    
-    if (imgBack === imgFront)
-      return req.flash('error', 'Check images provided are required.');
-
-    // Deposit amount into account
-    await account.deposit(amount);
-    return await Transaction.createTransaction(account._id, 'SFG', 'Online Deposit', 'Online SFG deposit', amount, 'Processed');
+    } else if (type === 'atm') {
+      return;
+    }
 
   })().then(response => {
     res.redirect('deposit');
