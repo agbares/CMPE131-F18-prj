@@ -11,7 +11,7 @@ html
     script(src="js/jquery.backstretch.min.js")
 
   body
-
+    <script>$.backstretch("img/orange0.jpg");</script>
     nav(class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top main-nav")
       button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar")
         span(class="navbar-toggler-icon")
@@ -22,16 +22,17 @@ html
           li(class="nav-item")
             a(class="nav-link" href="/dashboard") Dashboard
           li(class="nav-item")
-            a(class="nav-link" href="#") Make deposit
+            a(class="nav-link" href="../deposit") Make deposit
           li(class="nav-item")
             a(class="nav-link" href="./transfer") Transfer
           li(class="nav-item")
-            a(class="nav-link" href="#") Pay bill
+            a(class="nav-link" href="../settings") Setting
           li(class="nav-item")
-            a(class="nav-link" href="#") Setting
+            a(class="nav-link" href="/find-atm") Find nearest ATM
           li(class="nav-item")
             a(class="nav-link" href="../sign-out") Sign Out
     br
+
     <div class="container" style="margin-top:80px"></div>
 
     h1 Pay bill
@@ -145,3 +146,5 @@ html
 
     p
       a(href="../sign-out") Sign Out
+
+    

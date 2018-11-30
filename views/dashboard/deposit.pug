@@ -24,7 +24,13 @@ body
 				li(class="nav-item")
 					a(class="nav-link" href="/dashboard") Dashboard
 				li(class="nav-item")
-					a(class="nav-link" href="#") Find nearest ATM
+					a(class="nav-link" href="./transfer") Transfer
+				li(class="nav-item")
+					a(class="nav-link" href="./billpay") Pay bill
+				li(class="nav-item")
+					a(class="nav-link" href="./settings") Setting
+				li(class="nav-item")
+					a(class="nav-link" href="/find-atm") Find nearest ATM
 				li(class="nav-item")
 					a(class="nav-link" href="../sign-out") Sign Out
 	br
@@ -71,5 +77,14 @@ body
 						input(type="file" class="form-control" name="img-back" id="img-back")
 					button(type="submit" class="btn btn-primary btn-block" value="Submit") Submit
 			div(class="col-sm-4")
+
+		<br><br>
+		p
+		a(href="/dashboard") Return to Dashboard
+		
+		br
+
+		p
+		a(href="../sign-out") Sign Out
 	
 	script $.backstretch("img/SJSU_campus.jpg");
