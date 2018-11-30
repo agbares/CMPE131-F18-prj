@@ -13,36 +13,10 @@ var Billpay = require('../models/billpay');
 var Transaction = require('../models/transaction');
 
 /* Routes */
-router.get('/new-account/:account-type', auth.isAuthenticated, function(req, res) {
-  var accountObj = {
-    checkingAccount: null,
-    savingAccount: null,
-    creditAccount: null
-  }
+router.get('/new-account/:account-type/checking/saving', auth.isAuthenticated, function(req, res) {
+  const accountType = req.params['account-type'];
 
-  
-  Account.find({user_ID: req.user._id}, function(err, accounts){
-    if(err){
-      console.log(err);
-    }
-    
-    for(var i = 0; i < accounts.length; i++)
-    {
-      if(accounts[i].type == 'checking'){
-        accountObj.checkingAccount = accounts[i];
-      }
-      else if(accounts[i].type == 'saving'){
-        accountObj.savingAccount = accounts[i];
-      }
-      else if(accounts[i].type == 'credit'){
-        accountObj.creditAccount = accounts[i];
-      }
-      else{
-        console.log('No Accounts');
-      }
-    }
-    res.render('dashboard/index', accountObj);
-  })
+
 });
 
 router.get('/transfer', auth.isAuthenticated, function(req, res, next) {
