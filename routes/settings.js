@@ -52,13 +52,11 @@ router.post('/change-password', auth.isAuthenticated, function(req, res, next) {
 
   if(isEmpty(oldPass, newPass) == true){
     req.flash('error', 'A field is empty. ');
-    //return res.redirect('change-password');
     return res.redirect('/dashboard/settings');
   }
 
   if(samePass(oldPass, newPass) == true){
     req.flash('error', 'Old password and new password is the same. ');
-    // return res.redirect('change-password');
     return res.redirect('/dashboard/settings');
   }
 
@@ -67,7 +65,6 @@ router.post('/change-password', auth.isAuthenticated, function(req, res, next) {
     .then((response)=>{
       if(response == false){
         req.flash('error', 'Password does not match your current password. ');
-        //return res.redirect('change-password');
         return res.redirect('/dashboard/settings');
       }
       else{
@@ -81,7 +78,6 @@ router.post('/change-password', auth.isAuthenticated, function(req, res, next) {
 
   else{
     req.flash('error', 'New password confirmation is wrong. ');
-    //return res.redirect('change-password');
     return res.redirect('/dashboard/settings');
   }
 });
@@ -97,20 +93,16 @@ router.post('/close-account', auth.isAuthenticated, function(req, res, next){
           return res.redirect('/dashboard/settings');
         }
         else{
-          // await Account.findByIdAndRemove(closeAcc);
           return res.redirect('/dashboard');
         }
       }
       else if(acc.type == 'saving'){
         if(acc.balance == 0){
           return res.redirect('/dashboard');
-          //return Account.findByIdAndRemove(closeAcc)
         }
         else{
           var checking_acc = await Account.findOne({user_ID: req.user._id, type: 'checking'}).exec();
-          // checking_acc.balance = parseFloat(checking_acc.balance) + parseFloat(acc.balance);
           await Account.transfer(acc._id, checking_acc._id, acc.balance);
-          // await checking_acc.save();
           //await Account.findByIdAndRemove(closeAcc);
           return res.redirect('/dashboard');
         }
@@ -123,25 +115,20 @@ router.post('/close-account', auth.isAuthenticated, function(req, res, next){
 });
 
 router.post('/close-user', auth.isAuthenticated, function(req, res, next){
-  //const closeUser = req['body']['user-id'];
-  // (async function () {
-  //   var user = await Account.getAccounts(closeUser);
-  //   for(var i = 0; i < user.length; i++){
-  //     if(user[i] == 'checking'){
-  //       if(isEmptyBalance(user[i].balance) == true){
-
-  //       }
-  //     }
-  //   }
-  // })
+  const password = req['body']['password'];
   var userID = req.user._id;
   var account = null;
+
+  if(req.user.authenticate(password) == false){
+    return res.redirect('/dashboard/settings');
+  }
+
   Account.getAccounts(userID)
-  .then((res)=>{
-    account = res;
-    for(var i = 0; i < res.length; i++){
-      if(res[i] == 'checking'){ //Only checked for checkings in the first .then because a user will always have a checkings.
-        if(hasBalance(res[i].balance) == true){
+  .then(function(response){
+    account = response;
+    for(var i = 0; i < response.length; i++){
+      if(response[i] == 'checking'){ //Only checked for checkings in the first '.then' because a user will always have a checkings.
+        if(hasBalance(response[i].balance) == true){
           return true;
         }
         else{
@@ -152,8 +139,8 @@ router.post('/close-user', auth.isAuthenticated, function(req, res, next){
     return true; //If there's no checkings then you return true because it's like the same thing as having
                  //checkings >= 0. 
   })
-  .then((res)=>{
-    if(res == true){
+  .then(function(response){
+    if(response == true){
       for(var i = 0; i < account.length; i++){
         if(account[i] == 'saving'){
           if(hasBalance(account[i].balance) == true){
@@ -170,24 +157,28 @@ router.post('/close-user', auth.isAuthenticated, function(req, res, next){
       return false;
     }
   })
-  .then((res)=>{
-    if(res == true){
+  .then(function(response){
+    if(response == true){
       for(var i = 0; i < account.length; i++){
         if(account[i] == 'credit'){
           if(account[i].balance == 0){
-            //Account.findByIdAndDelete(closeUser);
-            return res.redirect('/dashboard');
+            Account.findByIdAndDelete(userID);
+            //req.user.save();
+            return res.redirect('/');
           }
           else{
-            return res.redirect('close-user');
+            request.flash('error', 'You still owe money for your credit account. ');
+            return res.redirect('/dashboard/settings');
           }
         }
       }
-      //Account.findByIdAndDelete(closeUser);
-      return res.redirect('/dashboard'); //This means that there isnt a "credit" which is fine. 
+      Account.findByIdAndDelete(userID);
+      //req.user.save();
+      return res.redirect('/'); //This means that there isnt a "credit" which is fine. 
     }
     else{
-      return res.redirect('close-user');
+      request.flash('error', 'You still owe money for your credit account. ');
+      return res.redirect('/dashboard/settings');
     }
   })
   .catch((err)=>{
