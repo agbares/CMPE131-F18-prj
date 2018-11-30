@@ -2,7 +2,7 @@ doctype html
 html(lang="en")
 
 head
-	title Dashboard
+	title Account
 	meta(charset="utf-8")
 	meta(name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no")
 	link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css")
@@ -12,7 +12,7 @@ head
 	script(src="js/jquery.backstretch.min.js")
 
 body
-	<script>$.backstretch("img/orange1.jpg");</script>
+
 	nav(class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top main-nav")
 		button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar")
 			span(class="navbar-toggler-icon")
@@ -61,15 +61,10 @@ body
 									td #{transaction.amount}
 						else
 							div No transactions found
+				<br><br>
+				p
+					a(href="/dashboard") Return to Dashboard
+					br
+					a(href="../sign-out") Sign Out
+
 			div(class="col-sm-2")
-
-		<br><br>
-		p
-		a(href="/dashboard") Return to Dashboard
-		
-		br
-
-		p
-		a(href="../sign-out") Sign Out
-	
-	
