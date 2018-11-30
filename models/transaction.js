@@ -9,7 +9,7 @@ const mongoose = require('mongoose');
 /* Schema */
 var transactionSchema = mongoose.Schema({
 account_ID: String,
-merchant_Name: String,
+merchant_name: String,
 type: String,
 description: String,
 amount: Number,
@@ -30,7 +30,7 @@ timestamp: Number,
  * @param {string} merchantName
  * @param {string} type
  * @param {string} description
- * @param {string} amount
+ * @param {Number} amount
  * @param {string} status
  * @returns {Promise} - Promise object that represents the response.
  */
@@ -52,8 +52,6 @@ transactionSchema.statics.createTransaction = async function(account_ID, merchan
   return await newTransaction.save();
 }
 
-
-
 /**
  * Gets an array of the most recent transactions.
  * @function getTransactions
@@ -63,12 +61,6 @@ transactionSchema.statics.createTransaction = async function(account_ID, merchan
  */
 transactionSchema.statics.getTransactions = async function(account_ID, quantity) {
 
-
-
-  // Search in DB for the n most recent transactions belonging to the account
-  // Where n is the quantity supplied.
-
-  // Return the documents
   return await this.find({account_ID: account_ID});
 }
 

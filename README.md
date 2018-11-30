@@ -42,7 +42,7 @@ views/
 ### Backend
 - Node.js     - The server
 - Express.js  - Framework aka tool: makes controlling MVC logic easier  
-- MySQL 
+- MongoDB 
 
 ## 3. Making Changes to the Repository
 Work in your designated branch. Designated branches are named after your name. When you want to submit major changes to the master branch, create a `Pull Request` from your branch into the `master` branch.
