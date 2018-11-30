@@ -56,9 +56,12 @@ body
 						if transactions
 							each transaction in transactions
 								tr
-									td #{transaction.timestamp}
+									td #{(new Date(transaction.timestamp)).toDateString()} #{(new Date(transaction.timestamp)).toLocaleTimeString()}
 									td #{transaction.description}
-									td #{transaction.amount}
+									if(Math.sign(transaction.amount) == -1)
+										td(align="right") -$#{parseFloat(Math.round(transaction.amount * 100) / 100 * -1).toFixed(2)}
+									else
+										td(align="right") $#{parseFloat(Math.round(transaction.amount * 100) / 100).toFixed(2)}
 						else
 							div No transactions found
 			div(class="col-sm-2")
