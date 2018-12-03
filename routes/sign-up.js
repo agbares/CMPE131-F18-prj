@@ -8,6 +8,7 @@ var express = require('express');
 var router = express.Router();
 var passport = require('passport')
 var User = require('../models/user');
+var Account = require('../models/account');
 
 /* Routes */
 router.get('/', function(req, res, next) {
@@ -28,16 +29,22 @@ router.post('/', function(req, res, next) {
     return res.redirect('sign-up');
   }
 
-  User.createUser(firstName, lastName, email, password, null, null).then((user) => {
+  (async function() {
+    const user = await User.createUser(firstName, lastName, email, password, null, null);
+    
     if (!user) {
       req.flash('error', 'User already exists with the given email');
       return res.redirect('sign-up');
     }
-
+    
+    // Create a checking account for the new user
+    const checking = await Account.createChecking(user._id);
+    
     // User creation was successful, so we'll pass control to the auth middleware
     // to authenticate the new user.
-    next();
-  });
+    return user;
+  
+  })().then(user => next()).catch(err => next(err));
 
 }, passport.authenticate('local', {
   successRedirect: '/dashboard',
