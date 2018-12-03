@@ -42,9 +42,9 @@ router.post('/', function(req, res, next) {
     
     // User creation was successful, so we'll pass control to the auth middleware
     // to authenticate the new user.
-    return user;
+    return next();
   
-  })().then(user => next()).catch(err => next(err));
+  })().then().catch(err => next(err));
 
 }, passport.authenticate('local', {
   successRedirect: '/dashboard',
