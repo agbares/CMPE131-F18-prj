@@ -14,6 +14,7 @@ var userSchema = mongoose.Schema({
   first_name: String,
   last_name: String,
   email: String,
+  emailLower: String,
   password: String,
   SSN: Number,
   birthdate: Number,
@@ -104,6 +105,7 @@ userSchema.statics.createUser = async function(firstName, lastName, email, passw
     first_name: firstName,
     last_name: lastName,
     email: email,
+    emailLower: email.toLocaleLowerCase(),
     password: password,
     SSN: SSN,
     birthdate: birthdate,
@@ -112,7 +114,7 @@ userSchema.statics.createUser = async function(firstName, lastName, email, passw
     last_signon_timestamp: null
   });
 
-  var user = await this.findOne({email: newUser.email});
+  var user = await this.findOne({emailLower: newUser.emailLower});
   
   if (user) {
     return false;
@@ -121,7 +123,7 @@ userSchema.statics.createUser = async function(firstName, lastName, email, passw
   var passHash = await this.generateHash(newUser.password);
   newUser.password = passHash;
 
-  return await newUser.save();;
+  return await newUser.save();
 }
 
 /**
@@ -131,7 +133,7 @@ userSchema.statics.createUser = async function(firstName, lastName, email, passw
  * @returns {User} - Found user object.
  */
 userSchema.statics.getUser = async function(email) {
-  return await this.findOne({email: email});
+  return await this.findOne({emailLower: email.toLocaleLowerCase()});
 }
 
 /* Export Module as a Mongoose Model*/
