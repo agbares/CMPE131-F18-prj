@@ -187,26 +187,26 @@ router.post('/billpay', auth.isAuthenticated, function(req, res, next) {
 });
 
 router.get('/deposit', auth.isAuthenticated, function(req, res, next) {
-  var accountObj = {
+  var responseObj = {
     checkingAccount: null,
     savingAccount: null,
-    creditAccount: null
-  }
+    creditAccount: null,
+    error: req.flash('error')[0]
+  };
 
   Account.getAccounts(req.user._id).then((accounts) => {
     for(var i = 0; i < accounts.length; i++) {
       if(accounts[i].type == 'checking') {
-        accountObj.checkingAccount = accounts[i];
+        responseObj.checkingAccount = accounts[i];
       
       } else if(accounts[i].type == 'saving') {
-        accountObj.savingAccount = accounts[i];
+        responseObj.savingAccount = accounts[i];
       
       } else if(accounts[i].type == 'credit') {
-        accountObj.creditAccount = accounts[i];
+        responseObj.creditAccount = accounts[i];
       }
     }
-    console.log(req.flash('error')[0])
-    res.render('dashboard/deposit', accountObj);
+    res.render('dashboard/deposit', responseObj);
 
   }).catch((err) => {
     next(err);
@@ -223,8 +223,9 @@ router.post('/deposit', auth.isAuthenticated, function(req, res, next) {
   const imgFront = req.body['img-front'];
 
   (async () => {
+    
+    /* Specific fields Input validation */
     if (type === 'check') {
-      /* Input validation */
   
       // We'll assume that some valid routing number has a length between 4 to 7; inclusive
       if (routing.length > 17 || routing.length < 4 || isNaN(routing))
@@ -234,27 +235,29 @@ router.post('/deposit', auth.isAuthenticated, function(req, res, next) {
       if (accountNumber.length < 4 || isNaN(accountNumber))
         return req.flash('error', 'Invalid account number')
 
-      var account = await Account.getAccount(accountNumberToDepositTo);
-      
-      if (account === null)
-        return req.flash('error', 'Invalid account');
-      
-      if (amount <= 0 || isNaN(amount))
-        return req.flash('error', 'Amounts must be greater than 0');
-      
       if (imgBack.length === 0 || imgFront.length === 0)
         return req.flash('error', 'Check images are required.');
-      
+        
       if (imgBack === imgFront)
-        return req.flash('error', 'Check images provided are required.');
-  
-      // Deposit amount into account
-      await account.deposit(amount);
-      return await Transaction.createTransaction(account._id, 'SFG', 'Online Deposit', 'Online SFG deposit', amount, 'Processed');
-
-    } else if (type === 'atm') {
-      return;
+        return req.flash('error', 'Check images provided cannot be the same.');
+        
+        
+    } else if (type === 'ATM') {
+      if (imgFront.length === 0)
+        return req.flash('error', 'ATM deposit receipt image is required.');
     }
+
+    /* Common fields input validation */
+    if (amount <= 0 || isNaN(amount))
+      return req.flash('error', 'Amounts must be greater than 0');
+      
+    var account = await Account.getAccount(accountNumberToDepositTo);
+    if (account === null)
+      return req.flash('error', 'Invalid account');
+        
+    // Deposit amount into account
+    await account.deposit(amount);
+    return await Transaction.createTransaction(account._id, 'SFG', 'Online Deposit', 'Online SFG deposit', amount, 'Processed');
 
   })().then(response => {
     res.redirect('deposit');
