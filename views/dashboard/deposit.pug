@@ -11,7 +11,8 @@ head
 	script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js")
 	script(src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js")
 	script(src="js/jquery.backstretch.min.js")
-
+	//script(src="js/depositATM.js") 
+		
 body
 
 	nav(class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top main-nav")
@@ -47,12 +48,10 @@ body
 						legend(class="col-form-legend col-sm-10") Deposit Type
 						div(class="form-check")
 							label(class="form-check-label")
-								//<label for="deposit-check">
 								<input class="form-check-input" type="radio" name="type" id="deposit-check" value="check" checked> Check
-								//<label for="deposit-atm">
 						div(class="form-check")
 							label(class="form-check-label")
-								<input class="form-check-input" type="radio" name="type" id="deposit-atm" value="ATM"> ATM
+								<input class="form-check-input" type="radio" data-toggle="collapse" data-target=".multi-collapse" aria-expanded="false" aria-controls="collapseExample" name="type" id="deposit-atm" value="ATM"> ATM
 					fieldset(class="form-group")
 						legend(class="col-form-legend col-sm-10") Deposit To
 						div(class="form-check")
@@ -61,21 +60,23 @@ body
 							if savingAccount
 								label(class="form-check-label")
 									<input class="form-check-input" type="radio" name="deposit-to" value="#{savingAccount._id}" id="deposit-saving"> Saving ($#{savingAccount.balance})
-					div(class="form-group")
-						label(for="routing") Routing #
-						input(type="text" class="form-control" name="routing" id="routing" placeholder="Routing #")
-					div(class="form-group")
-						label(for="account-number") Account #
-						input(type="text" class="form-control" name="account-number" id="account-number" placeholder="Account #")
+					div(class="collapse show multi-collapse" id="collapseCheck")
+						div(class="form-group")
+							label(for="routing") Routing #
+							input(type="text" class="form-control" name="routing" id="routing" placeholder="Routing #")
+						div(class="form-group")
+							label(for="account-number") Account #
+							input(type="text" class="form-control" name="account-number" id="account-number" placeholder="Account #")
 					div(class="form-group")
 						label(for="amount") Amount
 						input(type="text" class="form-control" name="amount" id="amount" placeholder="Amount")
 					div(class="form-group")
 						label(for="img-front") Front Image
 						input(type="file" class="form-control" name="img-front" id="img-front")
-					div(class="form-group")
-						label(for="img-back") Back Image
-						input(type="file" class="form-control" name="img-back" id="img-back")
+					div(class="collapse show multi-collapse" id="collapseCheck")
+						div(class="form-group")
+							label(for="img-back") Back Image
+							input(type="file" class="form-control" name="img-back" id="img-back")
 					button(type="submit" class="btn btn-primary btn-block" value="Submit") Submit
 			div(class="col-sm-4")
 
