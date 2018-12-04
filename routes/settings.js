@@ -103,7 +103,8 @@ router.post('/close-account', auth.isAuthenticated, function(req, res, next){
         else{
           var checking_acc = await Account.findOne({user_ID: req.user._id, type: 'checking'}).exec();
           await Account.transfer(acc._id, checking_acc._id, acc.balance);
-          //await Account.findByIdAndRemove(closeAcc);
+          await Account.findByIdAndRemove(closeAcc);
+          req.user.save();
           return res.redirect('/dashboard');
         }
       }
@@ -127,7 +128,7 @@ router.post('/close-user', auth.isAuthenticated, function(req, res, next){
   .then(function(response){
     account = response;
     for(var i = 0; i < response.length; i++){
-      if(response[i] == 'checking'){ //Only checked for checkings in the first '.then' because a user will always have a checkings.
+      if(response[i] == 'checking'){ 
         if(hasBalance(response[i].balance) == true){
           return true;
         }
@@ -136,8 +137,7 @@ router.post('/close-user', auth.isAuthenticated, function(req, res, next){
         }
       }
     }
-    return true; //If there's no checkings then you return true because it's like the same thing as having
-                 //checkings >= 0. 
+    return true;
   })
   .then(function(response){
     if(response == true){
@@ -163,7 +163,7 @@ router.post('/close-user', auth.isAuthenticated, function(req, res, next){
         if(account[i] == 'credit'){
           if(account[i].balance == 0){
             Account.findByIdAndDelete(userID);
-            //req.user.save();
+            req.user.save();
             return res.redirect('/');
           }
           else{
@@ -173,8 +173,8 @@ router.post('/close-user', auth.isAuthenticated, function(req, res, next){
         }
       }
       Account.findByIdAndDelete(userID);
-      //req.user.save();
-      return res.redirect('/'); //This means that there isnt a "credit" which is fine. 
+      req.user.save();
+      return res.redirect('/');
     }
     else{
       request.flash('error', 'You still owe money for your credit account. ');
