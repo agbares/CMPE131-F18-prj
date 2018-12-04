@@ -222,14 +222,25 @@ accountSchema.statics.transfer = async function(from, to, amount) {
 
   // Check for valid amount
   if (amount > fromAccount.balance) {
-    response.errorMessage = 'Amount is greater than the available balance.'
+    response.errorMessage = 'Amount is greater than the available balance.';
+    return response;
+  }
+
+  // Check for valid amount if paying off a credit card
+  if (amount > toAccount.balance) {
+    response.errorMessage = 'Amount is greater than the credit balance';
     return response;
   }
 
   // Make the transfer
   response.from = await fromAccount.deduct(amount);
-  response.to = await toAccount.deposit(amount);
-
+  
+  if (toAccount.type === 'credit')
+    response.to = await toAccount.deduct(amount);
+    
+  else
+    response.to = await toAccount.deposit(amount);
+    
   // Mask the first 6 digits of the accounts
   const fromID = response.from._id.replace(response.from._id.substring(0, response.from._id.length / 2), "xxxxxx");
   const toID = response.to._id.replace(response.to._id.substring(0, response.to._id.length / 2), "xxxxxx");

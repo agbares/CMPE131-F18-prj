@@ -13,28 +13,19 @@ function initPassport() {
     usernameField: 'email',
     passwordField: 'password',
     }, (email, password, done) => {
-      User.findOne({email: email}, (err, user) => {
-        if (err) {
-          return done(err);
-        }
+      (async function() {
         
-        if (!user) {
-          return done(null, false, {message: 'Incorret email.'});
-        }
+        const user = await User.getUser(email);
+        if (!user)
+          return done(null, false, {message: 'Incorrect email.'});
 
-        user.authenticate(password).then((res) => {
-          if (res) {
-            // Correct Password
-            return done(null, user);
-          }
-          else {
-            // Incorrect Password
-            return done(null, false, {message: 'Incorrect password.'});
-          }
-        }).catch((err) => {
-          return done(err);
-        });
-      });
+        const authenticated = await user.authenticate(password);
+        if (authenticated)
+          return done(null, user);
+        else
+          return done(null, false, {message: 'Incorrect password.'});
+
+      })().then().catch(err => done(err));
     }
   ));
 
