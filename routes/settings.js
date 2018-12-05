@@ -87,24 +87,30 @@ router.post('/close-account', auth.isAuthenticated, function(req, res, next){
   const closeAcc = req['body']['account-id'];
   (async function() {
     var acc = await Account.getAccount(closeAcc);
+    console.log(closeAcc);
+    console.log(acc);
       if(acc.type == 'credit'){
         if(acc.balance > 0){
           request.flash('error', 'You still owe money for your credit account. ');
           return res.redirect('/dashboard/settings');
         }
         else{
+          await Account.findByIdAndRemove(closeAcc);
+          console.log('Account has been deleted');
           return res.redirect('/dashboard');
         }
       }
       else if(acc.type == 'saving'){
         if(acc.balance == 0){
+          await Account.findByIdAndRemove(closeAcc);
+          console.log('Account has been deleted');
           return res.redirect('/dashboard');
         }
         else{
           var checking_acc = await Account.findOne({user_ID: req.user._id, type: 'checking'}).exec();
           await Account.transfer(acc._id, checking_acc._id, acc.balance);
           await Account.findByIdAndRemove(closeAcc);
-          req.user.save();
+          console.log('Account has been deleted');
           return res.redirect('/dashboard');
         }
       }
@@ -117,71 +123,42 @@ router.post('/close-account', auth.isAuthenticated, function(req, res, next){
 
 router.post('/close-user', auth.isAuthenticated, function(req, res, next){
   const password = req['body']['password'];
-  var userID = req.user._id;
-  var account = null;
 
-  if(req.user.authenticate(password) == false){
-    return res.redirect('/dashboard/settings');
-  }
-
-  Account.getAccounts(userID)
-  .then(function(response){
-    account = response;
-    for(var i = 0; i < response.length; i++){
-      if(response[i] == 'checking'){ 
-        if(hasBalance(response[i].balance) == true){
-          return true;
-        }
-        else{
-          return false;
-        }
-      }
-    }
-    return true;
-  })
-  .then(function(response){
-    if(response == true){
-      for(var i = 0; i < account.length; i++){
-        if(account[i] == 'saving'){
-          if(hasBalance(account[i].balance) == true){
-            return true;
-          }
-          else{
-            return false;
-          }
-        }
-      }
-      return true;
-    }
-    else{
-      return false;
-    }
-  })
-  .then(function(response){
-    if(response == true){
-      for(var i = 0; i < account.length; i++){
-        if(account[i] == 'credit'){
-          if(account[i].balance == 0){
-            Account.findByIdAndDelete(userID);
-            req.user.save();
-            return res.redirect('/');
-          }
-          else{
-            request.flash('error', 'You still owe money for your credit account. ');
-            return res.redirect('/dashboard/settings');
-          }
-        }
-      }
-      Account.findByIdAndDelete(userID);
-      req.user.save();
-      return res.redirect('/');
-    }
-    else{
-      request.flash('error', 'You still owe money for your credit account. ');
+  (async function() {
+    if(await req.user.authenticate(password) == false){
+      req.flash('error', 'Inputed password does not match with the database. ');
       return res.redirect('/dashboard/settings');
     }
-  })
-  .catch((err)=>{
+
+    var checkings = await Account.findOne({type: 'checking', user_ID: req.user._id});
+    var savings = await Account.findOne({type: 'saving', user_ID: req.user._id});
+    var credits = await Account.findOne({type: 'credit', user_ID: req.user._id});
+
+    if((checkings !== null && hasBalance(checkings.balance) == true) || checkings === null) {
+      if((savings !== null && hasBalance(savings.balance) == true) || savings === null){
+        if((credits !== null && credits.balance == 0) || credits === null){
+          await User.findByIdAndDelete(req.user._id).exec();
+          console.log(await User.findByIdAndDelete(req.user._id));
+          return res.redirect('/');
+        }
+        else{
+          req.flash('error', 'You still owe money for your credit account. ');
+          return res.redirect('/dashboard/settings');
+        }
+      }
+      else{
+        req.flash('error', 'You have a negative balance in your savings account. ');
+        return res.redirect('/dashboard/settings');
+      }
+    }
+    else{
+      req.flash('error', 'You have a negative balance in your checkings account. ');
+      return res.redirect('/dashboard/settings');
+    }
+
+  })().then((res) => {
+
+  }).catch((err) => {
     next(err);
   })
 });
