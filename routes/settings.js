@@ -138,7 +138,6 @@ router.post('/close-user', auth.isAuthenticated, function(req, res, next){
       if((savings !== null && hasBalance(savings.balance) == true) || savings === null){
         if((credits !== null && credits.balance == 0) || credits === null){
           await User.findByIdAndDelete(req.user._id).exec();
-          console.log(await User.findByIdAndDelete(req.user._id));
           return res.redirect('/');
         }
         else{
