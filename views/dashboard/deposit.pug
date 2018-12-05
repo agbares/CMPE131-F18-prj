@@ -48,10 +48,10 @@ body
 						legend(class="col-form-legend col-sm-10") Deposit Type
 						div(class="form-check")
 							label(class="form-check-label")
-								<input class="form-check-input" type="radio" name="type" id="deposit-check" value="check" checked> Check
+								<input class="form-check-input" type="radio" role="button" data-toggle="collapse.show" data-target=".multi-collapse" aria-expanded="true" aria-controls="collapseRouting collapseAccount collapseBackImg" name="type" id="deposit-check" value="check" checked> Check
 						div(class="form-check")
 							label(class="form-check-label")
-								<input class="form-check-input" type="radio" data-toggle="collapse" data-target=".multi-collapse" aria-expanded="false" aria-controls="collapseExample" name="type" id="deposit-atm" value="ATM"> ATM
+								<input class="form-check-input" type="radio" role="button" data-toggle="collapse" data-target=".multi-collapse" aria-expanded="false" aria-controls="collapseRouting collapseAccount collapseBackImg" name="type" id="deposit-atm" value="ATM"> ATM
 					fieldset(class="form-group")
 						legend(class="col-form-legend col-sm-10") Deposit To
 						div(class="form-check")
@@ -60,10 +60,11 @@ body
 							if savingAccount
 								label(class="form-check-label")
 									<input class="form-check-input" type="radio" name="deposit-to" value="#{savingAccount._id}" id="deposit-saving"> Saving ($#{savingAccount.balance})
-					div(class="collapse show multi-collapse" id="collapseCheck")
+					div(class="collapse show multi-collapse" id="collapseRouting")
 						div(class="form-group")
 							label(for="routing") Routing #
 							input(type="text" class="form-control" name="routing" id="routing" placeholder="Routing #")
+					//div(class="collapse show multi-collapse" id="collapseAccount")
 						div(class="form-group")
 							label(for="account-number") Account #
 							input(type="text" class="form-control" name="account-number" id="account-number" placeholder="Account #")
@@ -73,7 +74,7 @@ body
 					div(class="form-group")
 						label(for="img-front") Front Image
 						input(type="file" class="form-control" name="img-front" id="img-front")
-					div(class="collapse show multi-collapse" id="collapseCheck")
+					div(class="collapse show multi-collapse" id="collapseBackImg")
 						div(class="form-group")
 							label(for="img-back") Back Image
 							input(type="file" class="form-control" name="img-back" id="img-back")
