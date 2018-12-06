@@ -265,5 +265,48 @@ router.post('/deposit', auth.isAuthenticated, function(req, res, next) {
   }).catch(err => next(err));
 });
 
+
+router.get('/new-account/:accountType', auth.isAuthenticated, function(req, res, next) {
+  const accountType = req.params.accountType;
+
+  (async function() {
+    var account;
+    
+    switch (accountType) {
+      case 'saving':
+        // First check if the user already has the account
+        account = await Account.findOne({user_ID: req.user._id, type: 'saving'});
+        if (account !== null)
+          return null;
+          
+          account = await Account.createSaving(req.user._id);
+          break;
+          
+      case 'credit':
+        // First check if the user already has the account
+        account = await Account.findOne({user_ID: req.user._id, type: 'credit'});
+        if (account !== null)
+          return null;
+        
+        account = await Account.createCredit(req.user._id, 2000, null);
+        break;
+
+      default:
+        return null;
+        break;
+    }
+
+    return account;
+  })().then(account => {
+    if (account != null)
+      res.redirect(`../account/${account._id}`);
+
+    else
+      res.redirect(`../`);
+  }).catch(err => next(err));
+});
+
+
+
 /* Export Module */
 module.exports = router;

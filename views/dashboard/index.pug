@@ -44,7 +44,7 @@ body
 				| Balance: $#{checkingAccount.balance}
 		else
 			p 
-				a(href="#") Open a Checking account
+				a(href="dashboard/new-account") Open a Checking account
 				br
   
 		if savingAccount
@@ -54,7 +54,7 @@ body
 				| Balance: $#{savingAccount.balance}
 		else
 			p 
-				a(href="#") Open a Saving account
+				a(href="dashboard/new-account/saving") Open a Saving account
 				br
 
 		if creditAccount
@@ -64,7 +64,7 @@ body
 				| Balance: $#{creditAccount.balance}
 		else
 			p
-				a(href="#") Open Credit account
+				a(href="dashboard/new-account/credit") Open Credit account
 				br
 
 		div

@@ -87,30 +87,23 @@ router.post('/close-account', auth.isAuthenticated, function(req, res, next){
   const closeAcc = req['body']['account-id'];
   (async function() {
     var acc = await Account.getAccount(closeAcc);
-    console.log(closeAcc);
-    console.log(acc);
       if(acc.type == 'credit'){
         if(acc.balance > 0){
           request.flash('error', 'You still owe money for your credit account. ');
           return res.redirect('/dashboard/settings');
         }
         else{
-          await Account.findByIdAndRemove(closeAcc);
-          console.log('Account has been deleted');
+          await Account.close(acc._id);
           return res.redirect('/dashboard');
         }
       }
       else if(acc.type == 'saving'){
         if(acc.balance == 0){
-          await Account.findByIdAndRemove(closeAcc);
-          console.log('Account has been deleted');
+          await Account.close(acc._id);
           return res.redirect('/dashboard');
         }
         else{
-          var checking_acc = await Account.findOne({user_ID: req.user._id, type: 'checking'}).exec();
-          await Account.transfer(acc._id, checking_acc._id, acc.balance);
-          await Account.findByIdAndRemove(closeAcc);
-          console.log('Account has been deleted');
+          await Account.close(acc._id);
           return res.redirect('/dashboard');
         }
       }
@@ -137,6 +130,17 @@ router.post('/close-user', auth.isAuthenticated, function(req, res, next){
     if((checkings !== null && hasBalance(checkings.balance) == true) || checkings === null) {
       if((savings !== null && hasBalance(savings.balance) == true) || savings === null){
         if((credits !== null && credits.balance == 0) || credits === null){
+          
+          if (savings !== null)
+          Account.close(savings._id);
+          
+          if (credits !== null)
+          Account.close(credits._id);
+          
+          if (checkings !== null)
+            Account.close(checkings._id);
+          
+            // Delete user and accompanying accounts
           await User.findByIdAndDelete(req.user._id).exec();
           return res.redirect('/');
         }
