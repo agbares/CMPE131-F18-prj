@@ -222,14 +222,25 @@ accountSchema.statics.transfer = async function(from, to, amount) {
 
   // Check for valid amount
   if (amount > fromAccount.balance) {
-    response.errorMessage = 'Amount is greater than the available balance.'
+    response.errorMessage = 'Amount is greater than the available balance.';
+    return response;
+  }
+
+  // Check for valid amount if paying off a credit card
+  if (toAccount.type === 'credit' && amount > toAccount.balance) {
+    response.errorMessage = 'Amount is greater than the credit balance';
     return response;
   }
 
   // Make the transfer
   response.from = await fromAccount.deduct(amount);
-  response.to = await toAccount.deposit(amount);
-
+  
+  if (toAccount.type === 'credit')
+    response.to = await toAccount.deduct(amount);
+    
+  else
+    response.to = await toAccount.deposit(amount);
+    
   // Mask the first 6 digits of the accounts
   const fromID = response.from._id.replace(response.from._id.substring(0, response.from._id.length / 2), "xxxxxx");
   const toID = response.to._id.replace(response.to._id.substring(0, response.to._id.length / 2), "xxxxxx");
@@ -238,6 +249,47 @@ accountSchema.statics.transfer = async function(from, to, amount) {
   await Transaction.createTransaction(response.to._id, response.from._id, 'Transfer', `Money transfer from ${fromID}`, amount, 'Processed');
 
   return response;
+}
+
+/**
+ * Closes an account given that it does not have a negative balance (for checkings) or balance (for credit).
+ * @function close
+ * @param ID
+ */
+accountSchema.statics.close = async function(ID) {
+  var responseObj = {
+    success: null,
+    message: null
+  };
+  
+  const account = await this.findById(ID);
+
+  if ((account.type === 'credit') && account.balance > 0) {
+    responseObj.success = false;
+    responseObj.message = 'Account contains a balance';
+    return responseObj;
+  }
+  
+  if (account.type === 'saving' && account.balance < 0) {
+    responseObj.success = false;
+    responseObj.message = 'Account contains a negative balance';
+    return responseObj;
+  }
+  
+  if (account.type === 'checking' && account.balance < 0) {
+    responseObj.success = false;
+    responseObj.message = 'Account contains a negative balance';
+    return responseObj;
+  }
+
+  if (account.type !== 'checking') {
+    const checkingAccount = await this.findOne({user_ID: account.user_ID, type: 'checking'});
+    await this.transfer(account._id, checkingAccount._id, account.balance);
+  }
+  
+  await this.findByIdAndRemove(account._id);
+  responseObj.success = true;
+  return responseObj;
 }
 
 /* Export Module as a Mongoose Model*/
