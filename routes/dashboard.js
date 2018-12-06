@@ -45,26 +45,27 @@ router.get('/', auth.isAuthenticated, function(req, res) {
 });
 
 router.get('/transfer', auth.isAuthenticated, function(req, res, next) {
-  var accountObj = {
+  var responseObj = {
     checkingAccount: null,
     savingAccount: null,
-    creditAccount: null
+    creditAccount: null,
+    error: req.flash('error')[0]
   }
-
+  
   Account.getAccounts(req.user._id).then((accounts) => {
     for(var i = 0; i < accounts.length; i++) {
       if(accounts[i].type == 'checking') {
-        accountObj.checkingAccount = accounts[i];
+        responseObj.checkingAccount = accounts[i];
       
       } else if(accounts[i].type == 'saving') {
-        accountObj.savingAccount = accounts[i];
+        responseObj.savingAccount = accounts[i];
       
       } else if(accounts[i].type == 'credit') {
-        accountObj.creditAccount = accounts[i];
+        responseObj.creditAccount = accounts[i];
       }
     }
     
-    res.render('dashboard/transfer', accountObj);
+    res.render('dashboard/transfer', responseObj);
 
   }).catch((err) => {
     next(err);

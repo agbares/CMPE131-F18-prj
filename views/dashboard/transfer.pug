@@ -45,7 +45,9 @@ html
         br
 
         <form method="post">
-            
+            if error
+              p #{error}
+
             h3 Please choose a account you want to transfer money from
             if checkingAccount
                 <input type="radio" name="transferfrom" value="#{checkingAccount._id}" checked> Checking Account<br>
