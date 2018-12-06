@@ -19,6 +19,7 @@ router.use('/sign-out', require('./sign-out'));
 router.use('/dashboard', require('./dashboard'));
 router.use('/dashboard/settings', require('./settings'));
 router.use('/dashboard/account', require('./account'));
+router.use('/find-atm', require('./find-atm'));
 
 /* Routes */
 router.get('/', function(req, res, next) {
