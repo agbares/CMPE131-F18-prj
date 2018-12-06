@@ -1,63 +1,566 @@
-html    
-    head
-        title Find-ATM
-        meta(charset="utf-8")
-        meta(name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no")
-        link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css")
-        script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js")
-        script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js")
-        script(src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js")
-        script(src="js/jquery.backstretch.min.js")
+doctype html
+head
+  title Spartan Banking
+  meta(http-equiv='content-type' content='text/html; charset=UTF-8')
+  meta(name='viewport' content='width=device-width, initial-scale=1')
+  link(type='text/css' rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Google+Sans')
+  script(type='text/javascript' charset='UTF-8' src='https://maps.googleapis.com/maps-api-v3/api/js/35/3/common.js')
+  script(type='text/javascript' charset='UTF-8' src='https://maps.googleapis.com/maps-api-v3/api/js/35/3/util.js')
+  script(type='text/javascript' charset='UTF-8' src='https://maps.googleapis.com/maps-api-v3/api/js/35/3/map.js')
+  script(type='text/javascript' charset='UTF-8' src='https://maps.googleapis.com/maps-api-v3/api/js/35/3/marker.js')
+  script(type='text/javascript' charset='UTF-8' src='https://maps.googleapis.com/maps-api-v3/api/js/35/3/infowindow.js')
+  script(type='text/javascript' charset='UTF-8' src='https://maps.googleapis.com/maps-api-v3/api/js/35/3/controls.js')
+  script(type='text/javascript' charset='UTF-8' src='https://maps.googleapis.com/maps-api-v3/api/js/35/3/onion.js')
+  script(src='https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js')
+  link(rel='stylesheet' type='text/css' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css')
+  script(type='text/javascript' src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js')
+  script(type='text/javascript' src='http://maps.google.com/maps/api/js?key=AIzaSyCEqEqbEMhc7H5in_5OCSmRfOAk0NlWSuA&callback=initMap')
+  style(type='text/css').
+    html, body {
+    height: 100%;
+    }
+    .gm-control-active img{box-sizing:content-box;pointer-events:none}
+    .gm-control-active:hover img:nth-child(1),.gm-control-active:active img:nth-child(1),.gm-control-active:active img:nth-child(2){display:none}
+    .gm-ui-hover-effect{opacity:.6}
+    .gm-ui-hover-effect:hover{opacity:1}
+    .gm-style .gm-style-cc span,.gm-style .gm-style-cc a,.gm-style .gm-style-mtc div{font-size:10px;box-sizing:border-box}
+    @media print {
+    .gm-style .gmnoprint, .gmnoprint {
+    display:none;
+    }}
+    @media screen {
+    .gm-style .gmnoscreen, .gmnoscreen {
+    display:none
+    }}
+    .dismissButton{background-color:#white;border:1px solid #dadce0;color:#1a73e8;border-radius:4px;
+    font-family:Roboto,sans-serif;font-size:14px;height:36px;cursor:pointer;padding:0 24px}.dismissButton:hover{
+    background-color:rgba(66,133,244,0.04);border:1px solid #d2e3fc
+    }.dismissButton:focus{background-color:rgba(66,133,244,0.12);border:1px solid #d2e3fc;outline:0}.dismissButton:hover:focus{background-color:rgba(66,133,244,0.16);border:1px solid #d2e2fd}.dismissButton:active{background-color:rgba(66,133,244,0.16);border:1px solid #d2e2fd;box-shadow:0 1px 2px 0 rgba(60,64,67,0.3),0 1px 3px 1px rgba(60,64,67,0.15)}.dismissButton:disabled{background-color:#fff;border:1px solid #f1f3f4;color:#3c4043}
+    .gm-style-pbc{transition:opacity ease-in-out;background-color:rgba(0,0,0,0.45);text-align:center}.gm-style-pbt{font-size:22px;color:white;font-family:Roboto,Arial,sans-serif;position:relative;margin:0;top:50%;-webkit-transform:translateY(-50%);-ms-transform:translateY(-50%);transform:translateY(-50%)}
+    #map_canvas,#wrapper,#page-content-wrapper {
+    height: 100%;
+    width: 100%;
+    }
+    .container-fluid,.row,.col-lg-12 {
+    height: 100%;
+    width: 100%;
+    }
+    /* hamburger menu pseudo element */
+    .box-shadow-menu {
+    position: relative;
+    padding-left: 1.25em;
+    }
+    .box-shadow-menu:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.25em;
+    width: 1em;
+    height: 0.15em;
+    background: black;
+    box-shadow:
+    0 0.25em 0 0 black,
+    0 0.5em 0 0 black;
+    }
+    /* hamburger menu pseudo element gradient */
+    .gradient-menu {
+    padding-left: 1.25em;
+    position: relative;
+    }
+    .gradient-menu:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.21em;
+    bottom: 0.21em;
+    width: 1em;
+    background: linear-gradient(
+    to bottom,
+    black, black 20%,
+    white 20%, white 40%,
+    black 40%, black 60%,
+    white 60%, white 80%,
+    black 80%, black 100%
+    );
+    }
+    /*!
+    * Start Bootstrap - Simple Sidebar HTML Template (http://startbootstrap.com)
+    * Code licensed under the Apache License v2.0.
+    * For details, see http://www.apache.org/licenses/LICENSE-2.0.
+    */
+    /* Toggle Styles */
+    .nav-tabs>li{
+    float: none;
+    }
+    .nav-tabs{
+    border-bottom: 0;
+    }
+    .nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover{
+    margin: 0;
+    border-radius: 0;
+    }
+    #wrapper {
+    padding-left: 0;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+    }
+    #wrapper.toggled {
+    padding-left: 250px;
+    }
+    #sidebar-wrapper {
+    z-index: 1000;
+    position: fixed;
+    left: 250px;
+    width: 0;
+    height: 100%;
+    margin-left: -250px;
+    overflow-y: auto;
+    background: #0055a2;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+    }
+    #sidebar-wrapper li {
+    color: #fff;
+    }
+    #sidebar-wrapper li:hover {
+    font-weight: bold;
+    }
+    #wrapper.toggled #sidebar-wrapper {
+    width: 250px;
+    }
+    #page-content-wrapper {
+    width: 100%;
+    position: absolute;
+    padding: 15px;
+    }
+    #wrapper.toggled #page-content-wrapper {
+    position: absolute;
+    margin-right: -250px;
+    }
+    /* Sidebar Styles */
+    .sidebar-nav {
+    position: absolute;
+    top: 0;
+    width: 275px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    }
+    .sidebar-nav li {
+    text-indent: 20px;
+    line-height: 40px;
+    }
+    .sidebar-nav li a {
+    display: block;
+    text-decoration: none;
+    color: #999999;
+    }
+    .sidebar-nav li a:hover {
+    text-decoration: none;
+    color: #fff;
+    background: rgba(255,255,255,0.2);
+    }
+    .sidebar-nav li a:active,
+    .sidebar-nav li a:focus {
+    text-decoration: none;
+    }
+    .sidebar-nav > .sidebar-brand {
+    height: 65px;
+    font-size: 18px;
+    line-height: 60px;
+    }
+    .sidebar-sub {
+    color: #fff;
+    }
+    #sidebar-wrapper li.sidebar-sub:hover {
+    font-weight: normal;
+    }
+    .sidebar-nav > .sidebar-brand a {
+    color: #999999;
+    }
+    .sidebar-nav > .sidebar-brand a:hover {
+    color: white;
+    background: none;
+    }
+    @media(min-width:768px) {
+    #wrapper {
+    padding-left: 250px;
+    }
+    #wrapper.toggled {
+    padding-left: 0;
+    }
+    #sidebar-wrapper {
+    width: 275px;
+    }
+    #wrapper.toggled #sidebar-wrapper {
+    width: 0;
+    }
+    #page-content-wrapper {
+    padding: 20px;
+    padding-left: 55px;
+    position: relative;
+    }
+    #wrapper.toggled #page-content-wrapper {
+    position: relative;
+    margin-right: 0;
+    }
+    }
+    .gm-style {
+    font: 400 11px Roboto, Arial, sans-serif;
+    text-decoration: none;
+    }
+    .gm-style img {
+    max-width: none;
+    }
+  script(type='text/javascript').
+    // arrays to hold copies of the markers and html used by the side_bar
+    // because the function closure trick does not work there
+    var gmarkers = [];
+    var map = null;
+    function initialize() {
+    var myWrapper = $("#wrapper");
+    $("#menu-toggle").click(function(e) {
+    e.preventDefault();
+    $("#wrapper").toggleClass("toggled");
+    myWrapper.one('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', function(e) {
+    // code to execute after transition ends
+    google.maps.event.trigger(map,'resize');
+    });
+    });
+    // create the map
+    var myOptions = {
+    zoom: 12,
+    center: new google.maps.LatLng(37.335186, -121.881073),
+    mapTypeControl: true,
+    mapTypeControlOptions: {
+    style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
+    },
+    navigationControl: true,
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+    }
+    map = new google.maps.Map(document.getElementById("map_canvas"),
+    myOptions);
+    google.maps.event.addListener(map, 'click', function() {
+    infowindow.close();
+    });
+    // These markers will allow me to link a marker to the side bar and give a short description
+    //Add markers to the map
+    var point = new google.maps.LatLng(37.303592, -121.897093);
+    var marker = createMarker(point, "Lincoln", "1402 Lincoln Ave, San Jose, CA 95125")
+    var point = new google.maps.LatLng(37.265366, -121.865763);
+    var marker = createMarker(point, "Santa Clara AMPM", "55 W Santa Clara St, San Jose, CA 95113")
+    var point = new google.maps.LatLng(37.351565, -121.922481);
+    var marker = createMarker(point, "Coleman", "595 Coleman Ave #10, San Jose, CA 95110")
+    var point = new google.maps.LatLng(37.325210, -121.870940);
+    var marker = createMarker(point, "SJSU Campus", "210 S 9th St, San Jose, CA 95112")
+    var point = new google.maps.LatLng(37.340530, -121.842920);
+    var marker = createMarker(point, "Story Road", "1705 Story Rd ste a, San Jose, CA 95122")
+    var point = new google.maps.LatLng(37.323220, -121.914710);
+    var marker = createMarker(point, "San Carlos", "1432 W San Carlos St #90, San Jose, CA 95126")
+    var point = new google.maps.LatLng(37.307130, -121.864550);
+    var marker = createMarker(point, "Monterey Road", "2199 Monterey Rd # 30, San Jose, CA 95125")
+    var point = new google.maps.LatLng(37.323450, -121.948850);
+    var marker = createMarker(point, "Stevens Creek", "3057 Stevens Creek Blvd, Santa Clara, CA 95050")
+    var point = new google.maps.LatLng(37.372211, -121.844528);
+    var marker = createMarker(point, "Capitol Avenue", "370 N Capitol Ave, San Jose, CA 95133")
+    var point = new google.maps.LatLng(37.308540, -121.810970);
+    var marker = createMarker(point, "Capitol EXPY", "1705 E Capitol Expy, San Jose, CA 95121")
+    var point = new google.maps.LatLng(37.383870, -121.897150);
+    var marker = createMarker(point, "Brokaw", "1077 E Brokaw Rd, San Jose, CA 95131")
+    }
+    var infowindow = new google.maps.InfoWindow({
+    size: new google.maps.Size(150, 50)
+    });
+    // This function picks up the click and opens the corresponding info window
+    function myclick(i) {
+    google.maps.event.trigger(gmarkers[i], "click");
+    }
+    // A function to create the marker and set up the event window function
+    function createMarker(latlng, name, html) {
+    var contentString = html;
+    var marker = new google.maps.Marker({
+    position: latlng,
+    map: map,
+    zIndex: Math.round(latlng.lat() * -100000) << 5
+    });
+    google.maps.event.addListener(marker, 'click', function() {
+    infowindow.setContent(contentString);
+    infowindow.open(map, marker);
+    });
+    // save the info we need to use later for the side_bar
+    gmarkers.push(marker);
+    // add a line to the side_bar html
+    var sidebar = $('#side_bar');
+    var sidebar_entry = $('<li/>', {
+    'html': name,
+    'click': function() {
+    google.maps.event.trigger(marker, 'click');
+    },
+    'mouseenter': function() {
+    $(this).css('color', '#ffce00');
+    },
+    'mouseleave': function() {
+    $(this).css('color', '#ffffff');
+    }
+    }).appendTo(sidebar);
+    }
+    google.maps.event.addDomListener(window, 'load', initialize);
 
-    body
+body
+  #wrapper
+    // START SIDE BAR
+    #sidebar-wrapper(style="background-color: #343a40")
+      ul#side_bar.sidebar-nav
+        li.sidebar-brand(style='font-weight: bold; color: white;')
+          h1 SFG Banking
+          if !isAuthenticated
+            li.sidebar-sub
+              a(href="/") Home
+            li.sidebar-sub
+              a(href="/") Sign In
+          else
+            li.sidebar-sub
+              a(href="/dashboard") Dashboard
 
-        nav(class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top main-nav")
-            button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar")
-                span(class="navbar-toggler-icon")
-            div(class="mx-auto")
-                a(class="navbar-brand" href="/") SFG Banking
-            div(class="collapse navbar-collapse" id="collapsibleNavbar")
-                ul(class="nav navbar-nav flex-fill justify-content-center")
-                    if isSignIn
-                        li(class="nav-item")
-                            a(class="nav-link" href="/dashboard") Dashboard
-                        li(class="nav-item")
-                            a(class="nav-link" href="../deposit") Make deposit
-                        li(class="nav-item")
-                            a(class="nav-link" href="../transfer") Transfer
-                        li(class="nav-item")
-                            a(class="nav-link" href="../billpay") Pay bill
-                        li(class="nav-item")
-                            a(class="nav-link" href="../settings") Setting
-                        li(class="nav-item")
-                            a(class="nav-link" href="../sign-out") Sign Out
-                    else
-                        li(class="nav-item")
-                            a(class="nav-link" href="/") Home
-                        li(class="nav-item")
-                            a(class="nav-link" href="/sign-in") Sign in
-                        li(class="nav-item")
-                            a(class="nav-link" href="/sign-up") Sign up
-            
-        br
-        <div class="container" style="margin-top:80px"></div>
-
-        h1 You can find the nearest ATM here. 
-
-
-        <br><br>
-        if isSignIn
-            p
-                a(href="/dashboard") Return to Dashboard
-                br
-                a(href="../sign-out") Sign Out
-
-        else
-            p
-                a(href="/") Home
-                br
-                a(href="/sign-in") Sign in
-                br
-                a(href="/sign-up") Sign up
-
-       
+        li.sidebar-sub(style="margin-top:20px")
+          b Local ATMs for your convenience
+        hr(style="margin:3px 15px 15px;")
+    // /#sidebar-wrapper
+    // Page Content
+    #page-content-wrapper
+      .container-fluid
+        .row
+          .col-lg-12
+            h1
+              a#menu-toggle.gradient-menu(href='#menu-toggle')
+              |           &nbsp;Find an ATM
+              // a href="#menu-toggle" class="btn btn-default" >Toggle Sidebar</a
+            // you can use tables or divs for the overall layout
+            #map_canvas(style='position: relative; overflow: hidden;')
+              div(style='height: 100%; width: 100%; position: absolute; top: 0px; left: 0px; background-color: rgb(229, 227, 223);')
+                .gm-style(style='position: absolute; z-index: 0; left: 0px; top: 0px; height: 100%; width: 100%; padding: 0px; border-width: 0px; margin: 0px;')
+                  div(tabindex='0' style='position: absolute; z-index: 0; left: 0px; top: 0px; height: 100%; width: 100%; padding: 0px; border-width: 0px; margin: 0px; cursor: url("https://maps.gstatic.com/mapfiles/openhand_8_8.cur"), default; touch-action: pan-x pan-y;')
+                    div(style='z-index: 1; position: absolute; left: 50%; top: 50%; width: 100%; transform: translate(0px, 0px);')
+                      div(style='position: absolute; left: 0px; top: 0px; z-index: 100; width: 100%;')
+                        div(style='position: absolute; left: 0px; top: 0px; z-index: 0;')
+                          div(style='position: absolute; transform: matrix(1, 0, 0, 1, -145, -46); z-index: 992;')
+                            div(style='position: absolute; left: 0px; top: 0px; width: 256px; height: 256px;')
+                              div(style='width: 256px; height: 256px;')
+                            div(style='position: absolute; left: -256px; top: 0px; width: 256px; height: 256px;')
+                              div(style='width: 256px; height: 256px;')
+                            div(style='position: absolute; left: -256px; top: -256px; width: 256px; height: 256px;')
+                              div(style='width: 256px; height: 256px;')
+                            div(style='position: absolute; left: 0px; top: -256px; width: 256px; height: 256px;')
+                              div(style='width: 256px; height: 256px;')
+                            div(style='position: absolute; left: 256px; top: -256px; width: 256px; height: 256px;')
+                              div(style='width: 256px; height: 256px;')
+                            div(style='position: absolute; left: 256px; top: 0px; width: 256px; height: 256px;')
+                              div(style='width: 256px; height: 256px;')
+                            div(style='position: absolute; left: 256px; top: 256px; width: 256px; height: 256px;')
+                              div(style='width: 256px; height: 256px;')
+                            div(style='position: absolute; left: 0px; top: 256px; width: 256px; height: 256px;')
+                              div(style='width: 256px; height: 256px;')
+                            div(style='position: absolute; left: -256px; top: 256px; width: 256px; height: 256px;')
+                              div(style='width: 256px; height: 256px;')
+                            div(style='position: absolute; left: -512px; top: 256px; width: 256px; height: 256px;')
+                              div(style='width: 256px; height: 256px;')
+                            div(style='position: absolute; left: -512px; top: 0px; width: 256px; height: 256px;')
+                              div(style='width: 256px; height: 256px;')
+                            div(style='position: absolute; left: -512px; top: -256px; width: 256px; height: 256px;')
+                              div(style='width: 256px; height: 256px;')
+                            div(style='position: absolute; left: -512px; top: -512px; width: 256px; height: 256px;')
+                              div(style='width: 256px; height: 256px;')
+                            div(style='position: absolute; left: -256px; top: -512px; width: 256px; height: 256px;')
+                              div(style='width: 256px; height: 256px;')
+                            div(style='position: absolute; left: 0px; top: -512px; width: 256px; height: 256px;')
+                              div(style='width: 256px; height: 256px;')
+                            div(style='position: absolute; left: 256px; top: -512px; width: 256px; height: 256px;')
+                              div(style='width: 256px; height: 256px;')
+                            div(style='position: absolute; left: 512px; top: -512px; width: 256px; height: 256px;')
+                              div(style='width: 256px; height: 256px;')
+                            div(style='position: absolute; left: 512px; top: -256px; width: 256px; height: 256px;')
+                              div(style='width: 256px; height: 256px;')
+                            div(style='position: absolute; left: 512px; top: 0px; width: 256px; height: 256px;')
+                              div(style='width: 256px; height: 256px;')
+                            div(style='position: absolute; left: 512px; top: 256px; width: 256px; height: 256px;')
+                              div(style='width: 256px; height: 256px;')
+                      div(style='position: absolute; left: 0px; top: 0px; z-index: 101; width: 100%;')
+                      div(style='position: absolute; left: 0px; top: 0px; z-index: 102; width: 100%;')
+                      div(style='position: absolute; left: 0px; top: 0px; z-index: 103; width: 100%;')
+                        div(style='width: 27px; height: 43px; overflow: hidden; position: absolute; left: -113px; top: 20px; z-index: -139700928;')
+                          img(alt='' src='https://maps.gstatic.com/mapfiles/api-3/images/spotlight-poi2.png' draggable='false' style='position: absolute; left: 0px; top: 0px; width: 27px; height: 43px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;')
+                        div(style='width: 27px; height: 43px; overflow: hidden; position: absolute; left: 71px; top: -46px; z-index: -140540544;')
+                          img(alt='' src='https://maps.gstatic.com/mapfiles/api-3/images/spotlight-poi2.png' draggable='false' style='position: absolute; left: 0px; top: 0px; width: 27px; height: 43px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;')
+                        div(style='width: 27px; height: 43px; overflow: hidden; position: absolute; left: 71px; top: -23px; z-index: -140242848;')
+                          img(alt='' src='https://maps.gstatic.com/mapfiles/api-3/images/spotlight-poi2.png' draggable='false' style='position: absolute; left: 0px; top: 0px; width: 27px; height: 43px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;')
+                        div(style='position: absolute; left: 0px; top: 0px; z-index: -1;')
+                          div(style='position: absolute; transform: matrix(1, 0, 0, 1, -145, -46); z-index: 992;')
+                            div(style='width: 256px; height: 256px; overflow: hidden; position: absolute; left: 0px; top: 0px;')
+                            div(style='width: 256px; height: 256px; overflow: hidden; position: absolute; left: -256px; top: 0px;')
+                            div(style='width: 256px; height: 256px; overflow: hidden; position: absolute; left: -256px; top: -256px;')
+                            div(style='width: 256px; height: 256px; overflow: hidden; position: absolute; left: 0px; top: -256px;')
+                            div(style='width: 256px; height: 256px; overflow: hidden; position: absolute; left: 256px; top: -256px;')
+                            div(style='width: 256px; height: 256px; overflow: hidden; position: absolute; left: 256px; top: 0px;')
+                            div(style='width: 256px; height: 256px; overflow: hidden; position: absolute; left: 256px; top: 256px;')
+                            div(style='width: 256px; height: 256px; overflow: hidden; position: absolute; left: 0px; top: 256px;')
+                            div(style='width: 256px; height: 256px; overflow: hidden; position: absolute; left: -256px; top: 256px;')
+                            div(style='width: 256px; height: 256px; overflow: hidden; position: absolute; left: -512px; top: 256px;')
+                            div(style='width: 256px; height: 256px; overflow: hidden; position: absolute; left: -512px; top: 0px;')
+                            div(style='width: 256px; height: 256px; overflow: hidden; position: absolute; left: -512px; top: -256px;')
+                            div(style='width: 256px; height: 256px; overflow: hidden; position: absolute; left: -512px; top: -512px;')
+                            div(style='width: 256px; height: 256px; overflow: hidden; position: absolute; left: -256px; top: -512px;')
+                            div(style='width: 256px; height: 256px; overflow: hidden; position: absolute; left: 0px; top: -512px;')
+                            div(style='width: 256px; height: 256px; overflow: hidden; position: absolute; left: 256px; top: -512px;')
+                            div(style='width: 256px; height: 256px; overflow: hidden; position: absolute; left: 512px; top: -512px;')
+                            div(style='width: 256px; height: 256px; overflow: hidden; position: absolute; left: 512px; top: -256px;')
+                            div(style='width: 256px; height: 256px; overflow: hidden; position: absolute; left: 512px; top: 0px;')
+                            div(style='width: 256px; height: 256px; overflow: hidden; position: absolute; left: 512px; top: 256px;')
+                      div(style='position: absolute; left: 0px; top: 0px; z-index: 0;')
+                        div(style='position: absolute; transform: matrix(1, 0, 0, 1, -145, -46); z-index: 992;')
+                          div(style='position: absolute; left: 0px; top: 0px; width: 256px; height: 256px; transition: opacity 200ms linear 0s;')
+                            img(draggable='false' alt='' role='presentation' src='https://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i8!2i71!3i93!4i256!2m3!1e0!2sm!3i445151226!2m3!1e2!6m1!3e5!3m14!2sen-US!3sUS!5e18!12m1!1e68!12m3!1e37!2m1!1ssmartmaps!12m4!1e26!2m2!1sstyles!2zcC5zOi02MHxwLmw6LTYw!4e0!23i1301875&token=64596' style='width: 256px; height: 256px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;')
+                          div(style='position: absolute; left: -256px; top: 0px; width: 256px; height: 256px; transition: opacity 200ms linear 0s;')
+                            img(draggable='false' alt='' role='presentation' src='https://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i8!2i70!3i93!4i256!2m3!1e0!2sm!3i445151226!2m3!1e2!6m1!3e5!3m14!2sen-US!3sUS!5e18!12m1!1e68!12m3!1e37!2m1!1ssmartmaps!12m4!1e26!2m2!1sstyles!2zcC5zOi02MHxwLmw6LTYw!4e0!23i1301875&token=14629' style='width: 256px; height: 256px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;')
+                          div(style='position: absolute; left: -256px; top: -256px; width: 256px; height: 256px; transition: opacity 200ms linear 0s;')
+                            img(draggable='false' alt='' role='presentation' src='https://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i8!2i70!3i92!4i256!2m3!1e0!2sm!3i445151226!2m3!1e2!6m1!3e5!3m14!2sen-US!3sUS!5e18!12m1!1e68!12m3!1e37!2m1!1ssmartmaps!12m4!1e26!2m2!1sstyles!2zcC5zOi02MHxwLmw6LTYw!4e0!23i1301875&token=64562' style='width: 256px; height: 256px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;')
+                          div(style='position: absolute; left: 0px; top: -256px; width: 256px; height: 256px; transition: opacity 200ms linear 0s;')
+                            img(draggable='false' alt='' role='presentation' src='https://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i8!2i71!3i92!4i256!2m3!1e0!2sm!3i445151226!2m3!1e2!6m1!3e5!3m14!2sen-US!3sUS!5e18!12m1!1e68!12m3!1e37!2m1!1ssmartmaps!12m4!1e26!2m2!1sstyles!2zcC5zOi02MHxwLmw6LTYw!4e0!23i1301875&token=114529' style='width: 256px; height: 256px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;')
+                          div(style='position: absolute; left: 256px; top: -256px; width: 256px; height: 256px; transition: opacity 200ms linear 0s;')
+                            img(draggable='false' alt='' role='presentation' src='https://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i8!2i72!3i92!4i256!2m3!1e0!2sm!3i445151226!2m3!1e2!6m1!3e5!3m14!2sen-US!3sUS!5e18!12m1!1e68!12m3!1e37!2m1!1ssmartmaps!12m4!1e26!2m2!1sstyles!2zcC5zOi02MHxwLmw6LTYw!4e0!23i1301875&token=33425' style='width: 256px; height: 256px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;')
+                          div(style='position: absolute; left: 256px; top: 0px; width: 256px; height: 256px; transition: opacity 200ms linear 0s;')
+                            img(draggable='false' alt='' role='presentation' src='https://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i8!2i72!3i93!4i256!2m3!1e0!2sm!3i445151226!2m3!1e2!6m1!3e5!3m14!2sen-US!3sUS!5e18!12m1!1e68!12m3!1e37!2m1!1ssmartmaps!12m4!1e26!2m2!1sstyles!2zcC5zOi02MHxwLmw6LTYw!4e0!23i1301875&token=114563' style='width: 256px; height: 256px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;')
+                          div(style='position: absolute; left: 256px; top: 256px; width: 256px; height: 256px; transition: opacity 200ms linear 0s;')
+                            img(draggable='false' alt='' role='presentation' src='https://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i8!2i72!3i94!4i256!2m3!1e0!2sm!3i445151226!2m3!1e2!6m1!3e5!3m14!2sen-US!3sUS!5e18!12m1!1e68!12m3!1e37!2m1!1ssmartmaps!12m4!1e26!2m2!1sstyles!2zcC5zOi02MHxwLmw6LTYw!4e0!23i1301875&token=64630' style='width: 256px; height: 256px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;')
+                          div(style='position: absolute; left: 0px; top: 256px; width: 256px; height: 256px; transition: opacity 200ms linear 0s;')
+                            img(draggable='false' alt='' role='presentation' src='https://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i8!2i71!3i94!4i256!2m3!1e0!2sm!3i445151226!2m3!1e2!6m1!3e5!3m14!2sen-US!3sUS!5e18!12m1!1e68!12m3!1e37!2m1!1ssmartmaps!12m4!1e26!2m2!1sstyles!2zcC5zOi02MHxwLmw6LTYw!4e0!23i1301875&token=14663' style='width: 256px; height: 256px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;')
+                          div(style='position: absolute; left: -256px; top: 256px; width: 256px; height: 256px; transition: opacity 200ms linear 0s;')
+                            img(draggable='false' alt='' role='presentation' src='https://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i8!2i70!3i94!4i256!2m3!1e0!2sm!3i445151226!2m3!1e2!6m1!3e5!3m14!2sen-US!3sUS!5e18!12m1!1e68!12m3!1e37!2m1!1ssmartmaps!12m4!1e26!2m2!1sstyles!2zcC5zOi02MHxwLmw6LTYw!4e0!23i1301875&token=95767' style='width: 256px; height: 256px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;')
+                          div(style='position: absolute; left: -512px; top: 256px; width: 256px; height: 256px; transition: opacity 200ms linear 0s;')
+                            img(draggable='false' alt='' role='presentation' src='https://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i8!2i69!3i94!4i256!2m3!1e0!2sm!3i445151226!2m3!1e2!6m1!3e5!3m14!2sen-US!3sUS!5e18!12m1!1e68!12m3!1e37!2m1!1ssmartmaps!12m4!1e26!2m2!1sstyles!2zcC5zOi02MHxwLmw6LTYw!4e0!23i1301875&token=4032' style='width: 256px; height: 256px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;')
+                          div(style='position: absolute; left: -512px; top: 0px; width: 256px; height: 256px; transition: opacity 200ms linear 0s;')
+                            img(draggable='false' alt='' role='presentation' src='https://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i8!2i69!3i93!4i256!2m3!1e0!2sm!3i445151226!2m3!1e2!6m1!3e5!3m14!2sen-US!3sUS!5e18!12m1!1e68!12m3!1e37!2m1!1ssmartmaps!12m4!1e26!2m2!1sstyles!2zcC5zOi02MHxwLmw6LTYw!4e0!23i1301875&token=53965' style='width: 256px; height: 256px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;')
+                          div(style='position: absolute; left: -512px; top: -256px; width: 256px; height: 256px; transition: opacity 200ms linear 0s;')
+                            img(draggable='false' alt='' role='presentation' src='https://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i8!2i69!3i92!4i256!2m3!1e0!2sm!3i445151226!2m3!1e2!6m1!3e5!3m14!2sen-US!3sUS!5e18!12m1!1e68!12m3!1e37!2m1!1ssmartmaps!12m4!1e26!2m2!1sstyles!2zcC5zOi02MHxwLmw6LTYw!4e0!23i1301875&token=103898' style='width: 256px; height: 256px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;')
+                          div(style='position: absolute; left: -512px; top: -512px; width: 256px; height: 256px; transition: opacity 200ms linear 0s;')
+                            img(draggable='false' alt='' role='presentation' src='https://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i8!2i69!3i91!4i256!2m3!1e0!2sm!3i445151214!2m3!1e2!6m1!3e5!3m14!2sen-US!3sUS!5e18!12m1!1e68!12m3!1e37!2m1!1ssmartmaps!12m4!1e26!2m2!1sstyles!2zcC5zOi02MHxwLmw6LTYw!4e0!23i1301875&token=124742' style='width: 256px; height: 256px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;')
+                          div(style='position: absolute; left: -256px; top: -512px; width: 256px; height: 256px; transition: opacity 200ms linear 0s;')
+                            img(draggable='false' alt='' role='presentation' src='https://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i8!2i70!3i91!4i256!2m3!1e0!2sm!3i445151226!2m3!1e2!6m1!3e5!3m14!2sen-US!3sUS!5e18!12m1!1e68!12m3!1e37!2m1!1ssmartmaps!12m4!1e26!2m2!1sstyles!2zcC5zOi02MHxwLmw6LTYw!4e0!23i1301875&token=114495' style='width: 256px; height: 256px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;')
+                          div(style='position: absolute; left: 0px; top: -512px; width: 256px; height: 256px; transition: opacity 200ms linear 0s;')
+                            img(draggable='false' alt='' role='presentation' src='https://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i8!2i71!3i91!4i256!2m3!1e0!2sm!3i445151226!2m3!1e2!6m1!3e5!3m14!2sen-US!3sUS!5e18!12m1!1e68!12m3!1e37!2m1!1ssmartmaps!12m4!1e26!2m2!1sstyles!2zcC5zOi02MHxwLmw6LTYw!4e0!23i1301875&token=33391' style='width: 256px; height: 256px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;')
+                          div(style='position: absolute; left: 256px; top: -512px; width: 256px; height: 256px; transition: opacity 200ms linear 0s;')
+                            img(draggable='false' alt='' role='presentation' src='https://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i8!2i72!3i91!4i256!2m3!1e0!2sm!3i445151226!2m3!1e2!6m1!3e5!3m14!2sen-US!3sUS!5e18!12m1!1e68!12m3!1e37!2m1!1ssmartmaps!12m4!1e26!2m2!1sstyles!2zcC5zOi02MHxwLmw6LTYw!4e0!23i1301875&token=83358' style='width: 256px; height: 256px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;')
+                          div(style='position: absolute; left: 512px; top: -512px; width: 256px; height: 256px; transition: opacity 200ms linear 0s;')
+                            img(draggable='false' alt='' role='presentation' src='https://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i8!2i73!3i91!4i256!2m3!1e0!2sm!3i445151226!2m3!1e2!6m1!3e5!3m14!2sen-US!3sUS!5e18!12m1!1e68!12m3!1e37!2m1!1ssmartmaps!12m4!1e26!2m2!1sstyles!2zcC5zOi02MHxwLmw6LTYw!4e0!23i1301875&token=2254' style='width: 256px; height: 256px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;')
+                          div(style='position: absolute; left: 512px; top: -256px; width: 256px; height: 256px; transition: opacity 200ms linear 0s;')
+                            img(draggable='false' alt='' role='presentation' src='https://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i8!2i73!3i92!4i256!2m3!1e0!2sm!3i445151226!2m3!1e2!6m1!3e5!3m14!2sen-US!3sUS!5e18!12m1!1e68!12m3!1e37!2m1!1ssmartmaps!12m4!1e26!2m2!1sstyles!2zcC5zOi02MHxwLmw6LTYw!4e0!23i1301875&token=83392' style='width: 256px; height: 256px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;')
+                          div(style='position: absolute; left: 512px; top: 0px; width: 256px; height: 256px; transition: opacity 200ms linear 0s;')
+                            img(draggable='false' alt='' role='presentation' src='https://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i8!2i73!3i93!4i256!2m3!1e0!2sm!3i445151226!2m3!1e2!6m1!3e5!3m14!2sen-US!3sUS!5e18!12m1!1e68!12m3!1e37!2m1!1ssmartmaps!12m4!1e26!2m2!1sstyles!2zcC5zOi02MHxwLmw6LTYw!4e0!23i1301875&token=33459' style='width: 256px; height: 256px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;')
+                          div(style='position: absolute; left: 512px; top: 256px; width: 256px; height: 256px; transition: opacity 200ms linear 0s;')
+                            img(draggable='false' alt='' role='presentation' src='https://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i8!2i73!3i94!4i256!2m3!1e0!2sm!3i445151226!2m3!1e2!6m1!3e5!3m14!2sen-US!3sUS!5e18!12m1!1e68!12m3!1e37!2m1!1ssmartmaps!12m4!1e26!2m2!1sstyles!2zcC5zOi02MHxwLmw6LTYw!4e0!23i1301875&token=114597' style='width: 256px; height: 256px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;')
+                    .gm-style-pbc(style='z-index: 2; position: absolute; height: 100%; width: 100%; padding: 0px; border-width: 0px; margin: 0px; left: 0px; top: 0px; opacity: 0;')
+                      p.gm-style-pbt
+                    div(style='z-index: 3; position: absolute; height: 100%; width: 100%; padding: 0px; border-width: 0px; margin: 0px; left: 0px; top: 0px; touch-action: pan-x pan-y;')
+                      div(style='z-index: 4; position: absolute; left: 50%; top: 50%; width: 100%; transform: translate(0px, 0px);')
+                        div(style='position: absolute; left: 0px; top: 0px; z-index: 104; width: 100%;')
+                        div(style='position: absolute; left: 0px; top: 0px; z-index: 105; width: 100%;')
+                        div(style='position: absolute; left: 0px; top: 0px; z-index: 106; width: 100%;')
+                          div(style='width: 27px; height: 43px; overflow: hidden; position: absolute; opacity: 0; left: -113px; top: 20px; z-index: -139700928;')
+                            img(alt='' src='https://maps.gstatic.com/mapfiles/api-3/images/spotlight-poi2.png' draggable='false' usemap='#gmimap0' style='position: absolute; left: 0px; top: 0px; width: 27px; height: 43px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;')
+                            map#gmimap0(name='gmimap0')
+                              area(log='miw' coords='13.5,0,4,3.75,0,13.5,13.5,43,27,13.5,23,3.75' shape='poly' title='' style='cursor: pointer; touch-action: none;')
+                          div(style='width: 27px; height: 43px; overflow: hidden; position: absolute; opacity: 0; left: 71px; top: -46px; z-index: -140540544;')
+                            img(alt='' src='https://maps.gstatic.com/mapfiles/api-3/images/spotlight-poi2.png' draggable='false' usemap='#gmimap1' style='position: absolute; left: 0px; top: 0px; width: 27px; height: 43px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;')
+                            map#gmimap1(name='gmimap1')
+                              area(log='miw' coords='13.5,0,4,3.75,0,13.5,13.5,43,27,13.5,23,3.75' shape='poly' title='' style='cursor: pointer; touch-action: none;')
+                          div(style='width: 27px; height: 43px; overflow: hidden; position: absolute; opacity: 0; left: 71px; top: -23px; z-index: -140242848;')
+                            img(alt='' src='https://maps.gstatic.com/mapfiles/api-3/images/spotlight-poi2.png' draggable='false' usemap='#gmimap2' style='position: absolute; left: 0px; top: 0px; width: 27px; height: 43px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;')
+                            map#gmimap2(name='gmimap2')
+                              area(log='miw' coords='13.5,0,4,3.75,0,13.5,13.5,43,27,13.5,23,3.75' shape='poly' title='' style='cursor: pointer; touch-action: none;')
+                        div(style='position: absolute; left: 0px; top: 0px; z-index: 107; width: 100%;')
+                  iframe(aria-hidden='true' frameborder='0' style='z-index: -1; position: absolute; width: 100%; height: 100%; top: 0px; left: 0px; border: none;' src='about:blank')
+                  div(style='margin-left: 5px; margin-right: 5px; z-index: 1000000; position: absolute; left: 0px; bottom: 0px;')
+                    a(target='_blank' rel='noopener' href='https://maps.google.com/maps?ll=43.907787,-79.359741&z=8&t=m&hl=en-US&gl=US&mapclient=apiv3' title='Open this area in Google Maps (opens a new window)' style='position: static; overflow: visible; float: none; display: inline;')
+                      div(style='width: 66px; height: 26px; cursor: pointer;')
+                        img(alt='' src='https://maps.gstatic.com/mapfiles/api-3/images/google4.png' draggable='false' style='position: absolute; left: 0px; top: 0px; width: 66px; height: 26px; user-select: none; border: 0px; padding: 0px; margin: 0px;')
+                  div(style='background-color: white; padding: 15px 21px; border: 1px solid rgb(171, 171, 171); font-family: Roboto, Arial, sans-serif; color: white; box-sizing: border-box; box-shadow: rgba(0, 0, 0, 0.2) 0px 4px 16px; z-index: 10000002; display: none; width: 300px; height: 100px; position: absolute; left: 354px; top: 5px;')
+                    div(style='padding: 0px 0px 10px; font-size: 16px;') Map Data
+                    div(style='font-size: 13px;') Map data &copy;2018 Google
+                    button.gm-ui-hover-effect(draggable='false' title='Close' aria-label='Close' type='button' style='background: none; display: block; border: 0px; margin: 0px; padding: 0px; position: absolute; cursor: pointer; user-select: none; top: 0px; right: 0px; width: 37px; height: 37px;')
+                      img(src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224px%22%20height%3D%2224px%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22%23000000%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M19%206.41L17.59%205%2012%2010.59%206.41%205%205%206.41%2010.59%2012%205%2017.59%206.41%2019%2012%2013.41%2017.59%2019%2019%2017.59%2013.41%2012z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M0%200h24v24H0z%22%20fill%3D%22none%22%2F%3E%0A%3C%2Fsvg%3E%0A' style='pointer-events: none; display: block; width: 13px; height: 13px; margin: 12px;')
+                  .gmnoprint(style='z-index: 1000001; position: absolute; right: 166px; bottom: 0px; width: 121px;')
+                    .gm-style-cc(draggable='false' style='user-select: none; height: 14px; line-height: 14px;')
+                      div(style='opacity: 0.7; width: 100%; height: 100%; position: absolute;')
+                        div(style='width: 1px;')
+                        div(style='background-color: white; width: auto; height: 100%; margin-left: 1px;')
+                      div(style='position: relative; padding-right: 6px; padding-left: 6px; font-family: Roboto, Arial, sans-serif; font-size: 10px; color: rgb(68, 68, 68); white-space: nowrap; direction: ltr; text-align: right; vertical-align: middle; display: inline-block;')
+                        a(style='text-decoration: none; cursor: pointer; display: none;') Map Data
+                        span Map data &copy;2018 Google
+                  .gmnoscreen(style='position: absolute; right: 0px; bottom: 0px;')
+                    div(style='font-family: Roboto, Arial, sans-serif; font-size: 11px; color: rgb(68, 68, 68); direction: ltr; text-align: right; background-color: rgb(245, 245, 245);') Map data &copy;2018 Google
+                  .gmnoprint.gm-style-cc(draggable='false' style='z-index: 1000001; user-select: none; height: 14px; line-height: 14px; position: absolute; right: 95px; bottom: 0px;')
+                    div(style='opacity: 0.7; width: 100%; height: 100%; position: absolute;')
+                      div(style='width: 1px;')
+                      div(style='background-color: rgb(245, 245, 245); width: auto; height: 100%; margin-left: 1px;')
+                    div(style='position: relative; padding-right: 6px; padding-left: 6px; font-family: Roboto, Arial, sans-serif; font-size: 10px; color: rgb(68, 68, 68); white-space: nowrap; direction: ltr; text-align: right; vertical-align: middle; display: inline-block;')
+                      a(href='https://www.google.com/intl/en-US_US/help/terms_maps.html' target='_blank' rel='noopener' style='text-decoration: none; cursor: pointer; color: rgb(68, 68, 68);') Terms of Use
+                  button.gm-control-active.gm-fullscreen-control(draggable='false' title='Toggle fullscreen view' aria-label='Toggle fullscreen view' type='button' style='background: none rgb(255, 255, 255); border: 0px; margin: 10px; padding: 0px; position: absolute; cursor: pointer; user-select: none; border-radius: 2px; height: 40px; width: 40px; box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px; overflow: hidden; top: 0px; right: 0px;')
+                    img(src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2218%22%20height%3D%2218%22%20viewBox%3D%220%20018%2018%22%3E%0A%20%20%3Cpath%20fill%3D%22%23666%22%20d%3D%22M0%2C0v2v4h2V2h4V0H2H0z%20M16%2C0h-4v2h4v4h2V2V0H16z%20M16%2C16h-4v2h4h2v-2v-4h-2V16z%20M2%2C12H0v4v2h2h4v-2H2V12z%22%2F%3E%0A%3C%2Fsvg%3E%0A' style='height: 18px; width: 18px; margin: 11px;')
+                    img(src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2218%22%20height%3D%2218%22%20viewBox%3D%220%200%2018%2018%22%3E%0A%20%20%3Cpath%20fill%3D%22%23333%22%20d%3D%22M0%2C0v2v4h2V2h4V0H2H0z%20M16%2C0h-4v2h4v4h2V2V0H16z%20M16%2C16h-4v2h4h2v-2v-4h-2V16z%20M2%2C12H0v4v2h2h4v-2H2V12z%22%2F%3E%0A%3C%2Fsvg%3E%0A' style='height: 18px; width: 18px; margin: 11px;')
+                    img(src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2218%22%20height%3D%2218%22%20viewBox%3D%220%200%2018%2018%22%3E%0A%20%20%3Cpath%20fill%3D%22%23111%22%20d%3D%22M0%2C0v2v4h2V2h4V0H2H0z%20M16%2C0h-4v2h4v4h2V2V0H16z%20M16%2C16h-4v2h4h2v-2v-4h-2V16z%20M2%2C12H0v4v2h2h4v-2H2V12z%22%2F%3E%0A%3C%2Fsvg%3E%0A' style='height: 18px; width: 18px; margin: 11px;')
+                  .gm-style-cc(draggable='false' style='user-select: none; height: 14px; line-height: 14px; position: absolute; right: 0px; bottom: 0px;')
+                    div(style='opacity: 0.7; width: 100%; height: 100%; position: absolute;')
+                      div(style='width: 1px;')
+                      div(style='background-color: rgb(245, 245, 245); width: auto; height: 100%; margin-left: 1px;')
+                    div(style='position: relative; padding-right: 6px; padding-left: 6px; font-family: Roboto, Arial, sans-serif; font-size: 10px; color: rgb(68, 68, 68); white-space: nowrap; direction: ltr; text-align: right; vertical-align: middle; display: inline-block;')
+                      a(target='_blank' rel='noopener' title='Report errors in the road map or imagery to Google' href='https://www.google.com/maps/@43.907787,-79.359741,8z/data=!10m1!1e1!12b1?source=apiv3&rapsrc=apiv3' style='font-family: Roboto, Arial, sans-serif; font-size: 10px; color: rgb(68, 68, 68); text-decoration: none; position: relative;') Report a map error
+                  .gmnoprint.gm-bundled-control.gm-bundled-control-on-bottom(draggable='false' controlwidth='0' controlheight='0' style='margin: 10px; user-select: none; position: absolute; bottom: 14px; right: 0px; display: none;')
+                    .gmnoprint(style='display: none; position: absolute;')
+                      div(draggable='false' style='user-select: none; box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px; border-radius: 2px; cursor: pointer; background-color: rgb(255, 255, 255);')
+                        button.gm-control-active(draggable='false' title='Zoom in' aria-label='Zoom in' type='button' style='background: none; display: block; border: 0px; margin: 0px; padding: 0px; position: relative; cursor: pointer; user-select: none; overflow: hidden;')
+                          img(src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2218%22%20height%3D%2218%22%20viewBox%3D%220%200%2018%2018%22%3E%0A%20%20%3Cpolygon%20fill%3D%22%23666%22%20points%3D%2218%2C7%2011%2C7%2011%2C0%207%2C0%207%2C7%200%2C7%200%2C11%207%2C11%207%2C18%2011%2C18%2011%2C11%2018%2C11%22%2F%3E%0A%3C%2Fsvg%3E%0A' style='height: 18px; width: 18px; margin: 9px 11px 13px;')
+                          img(src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2218%22%20height%3D%2218%22%20viewBox%3D%220%200%2018%2018%22%3E%0A%20%20%3Cpolygon%20fill%3D%22%23333%22%20points%3D%2218%2C7%2011%2C7%2011%2C0%207%2C0%207%2C7%200%2C7%200%2C11%207%2C11%207%2C18%2011%2C18%2011%2C11%2018%2C11%22%2F%3E%0A%3C%2Fsvg%3E%0A' style='height: 18px; width: 18px; margin: 9px 11px 13px;')
+                          img(src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2218%22%20height%3D%2218%22%20viewBox%3D%220%200%2018%2018%22%3E%0A%20%20%3Cpolygon%20fill%3D%22%23111%22%20points%3D%2218%2C7%2011%2C7%2011%2C0%207%2C0%207%2C7%200%2C7%200%2C11%207%2C11%207%2C18%2011%2C18%2011%2C11%2018%2C11%22%2F%3E%0A%3C%2Fsvg%3E%0A' style='height: 18px; width: 18px; margin: 9px 11px 13px;')
+                        div(style='position: relative; overflow: hidden; width: 30px; height: 1px; margin: 0px 5px; background-color: rgb(230, 230, 230);')
+                        button.gm-control-active(draggable='false' title='Zoom out' aria-label='Zoom out' type='button' style='background: none; display: block; border: 0px; margin: 0px; padding: 0px; position: relative; cursor: pointer; user-select: none; overflow: hidden;')
+                          img(src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2218%22%20height%3D%2218%22%20viewBox%3D%220%200%2018%2018%22%3E%0A%20%20%3Cpath%20fill%3D%22%23666%22%20d%3D%22M0%2C7h18v4H0V7z%22%2F%3E%0A%3C%2Fsvg%3E%0A' style='height: 18px; width: 18px; margin: 13px 11px 9px;')
+                          img(src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2218%22%20height%3D%2218%22%20viewBox%3D%220%200%2018%2018%22%3E%0A%20%20%3Cpath%20fill%3D%22%23333%22%20d%3D%22M0%2C7h18v4H0V7z%22%2F%3E%0A%3C%2Fsvg%3E%0A' style='height: 18px; width: 18px; margin: 13px 11px 9px;')
+                          img(src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2218%22%20height%3D%2218%22%20viewBox%3D%220%200%2018%2018%22%3E%0A%20%20%3Cpath%20fill%3D%22%23111%22%20d%3D%22M0%2C7h18v4H0V7z%22%2F%3E%0A%3C%2Fsvg%3E%0A' style='height: 18px; width: 18px; margin: 13px 11px 9px;')
+                    div(style='position: absolute; left: 0px; top: 0px;')
+                    .gmnoprint(controlwidth='40' controlheight='40' style='display: none; position: absolute;')
+                      div(style='width: 40px; height: 40px;')
+                        button.gm-control-active(draggable='false' title='Rotate map 90 degrees' aria-label='Rotate map 90 degrees' type='button' style='background: none rgb(255, 255, 255); display: none; border: 0px; margin: 0px 0px 32px; padding: 0px; position: relative; cursor: pointer; user-select: none; width: 40px; height: 40px; top: 0px; left: 0px; overflow: hidden; box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px; border-radius: 2px;')
+                          img(src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2222%22%20viewBox%3D%220%200%2024%2022%22%3E%0A%20%20%3Cpath%20fill%3D%22%23666%22%20fill-rule%3D%22evenodd%22%20d%3D%22M20%2010c0-5.52-4.48-10-10-10s-10%204.48-10%2010v5h5v-5c0-2.76%202.24-5%205-5s5%202.24%205%205v5h-4l6.5%207%206.5-7h-4v-5z%22%20clip-rule%3D%22evenodd%22%2F%3E%0A%3C%2Fsvg%3E%0A' style='height: 28px; width: 28px; margin: 6px;')
+                          img(src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2222%22%20viewBox%3D%220%200%2024%2022%22%3E%0A%20%20%3Cpath%20fill%3D%22%23333%22%20fill-rule%3D%22evenodd%22%20d%3D%22M20%2010c0-5.52-4.48-10-10-10s-10%204.48-10%2010v5h5v-5c0-2.76%202.24-5%205-5s5%202.24%205%205v5h-4l6.5%207%206.5-7h-4v-5z%22%20clip-rule%3D%22evenodd%22%2F%3E%0A%3C%2Fsvg%3E%0A' style='height: 28px; width: 28px; margin: 6px;')
+                          img(src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2222%22%20viewBox%3D%220%200%2024%2022%22%3E%0A%20%20%3Cpath%20fill%3D%22%23111%22%20fill-rule%3D%22evenodd%22%20d%3D%22M20%2010c0-5.52-4.48-10-10-10s-10%204.48-10%2010v5h5v-5c0-2.76%202.24-5%205-5s5%202.24%205%205v5h-4l6.5%207%206.5-7h-4v-5z%22%20clip-rule%3D%22evenodd%22%2F%3E%0A%3C%2Fsvg%3E%0A' style='height: 28px; width: 28px; margin: 6px;')
+                        button.gm-tilt.gm-control-active(draggable='false' title='Tilt map' aria-label='Tilt map' type='button' style='background: none rgb(255, 255, 255); display: block; border: 0px; margin: 0px; padding: 0px; position: relative; cursor: pointer; user-select: none; width: 40px; height: 40px; top: 0px; left: 0px; overflow: hidden; box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px; border-radius: 2px;')
+                          img(src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2218px%22%20height%3D%2216px%22%20viewBox%3D%220%200%2018%2016%22%3E%0A%20%20%3Cpath%20fill%3D%22%23666%22%20d%3D%22M0%2C16h8V9H0V16z%20M10%2C16h8V9h-8V16z%20M0%2C7h8V0H0V7z%20M10%2C0v7h8V0H10z%22%2F%3E%0A%3C%2Fsvg%3E%0A' style='width: 18px; height: 16px; margin: 12px 11px;')
+                          img(src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2218px%22%20height%3D%2216px%22%20viewBox%3D%220%200%2018%2016%22%3E%0A%20%20%3Cpath%20fill%3D%22%23333%22%20d%3D%22M0%2C16h8V9H0V16z%20M10%2C16h8V9h-8V16z%20M0%2C7h8V0H0V7z%20M10%2C0v7h8V0H10z%22%2F%3E%0A%3C%2Fsvg%3E%0A' style='width: 18px; height: 16px; margin: 12px 11px;')
+                          img(src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2218px%22%20height%3D%2216px%22%20viewBox%3D%220%200%2018%2016%22%3E%0A%20%20%3Cpath%20fill%3D%22%23111%22%20d%3D%22M0%2C16h8V9H0V16z%20M10%2C16h8V9h-8V16z%20M0%2C7h8V0H0V7z%20M10%2C0v7h8V0H10z%22%2F%3E%0A%3C%2Fsvg%3E%0A' style='width: 18px; height: 16px; margin: 12px 11px;')
+              div(style='background-color: white; font-weight: 500; font-family: Roboto, sans-serif; padding: 15px 25px; box-sizing: border-box; top: 5px; border: 1px solid rgba(0, 0, 0, 0.12); border-radius: 5px; left: 50%; max-width: 375px; position: absolute; transform: translateX(-50%); width: calc(100% - 10px); z-index: 1;')
+                div
+                  img(alt='' src='https://maps.gstatic.com/mapfiles/api-3/images/google_gray.svg' draggable='false' style='padding: 0px; margin: 0px; border: 0px; height: 17px; vertical-align: middle; width: 52px; user-select: none;')
+                div(style='line-height: 20px; margin: 15px 0px;')
+                  span(style='color: rgba(0, 0, 0, 0.87); font-size: 14px;') This page can&apos;t load Google Maps correctly.
+                table(style='width: 100%;')
+                  tr
+                    td(style='line-height: 16px; vertical-align: middle;')
+                      a(href='https://developers.google.com/maps/documentation/javascript/error-messages?utm_source=maps_js&utm_medium=degraded&utm_campaign=keyless#api-key-and-billing-errors' target='_blank' rel='noopener' style='color: rgba(0, 0, 0, 0.54); font-size: 12px;') Do you own this website?
+                    td(style='text-align: right;')
+                      button.dismissButton OK
+              div(style='background-color: white; font-weight: 500; font-family: Roboto, sans-serif; padding: 15px 25px; box-sizing: border-box; top: 5px; border: 1px solid rgba(0, 0, 0, 0.12); border-radius: 5px; left: 50%; max-width: 375px; position: absolute; transform: translateX(-50%); width: calc(100% - 10px); z-index: 1;')
+                div
+                  img(alt='' src='https://maps.gstatic.com/mapfiles/api-3/images/google_gray.svg' draggable='false' style='padding: 0px; margin: 0px; border: 0px; height: 17px; vertical-align: middle; width: 52px; user-select: none;')
+                div(style='line-height: 20px; margin: 15px 0px;')
+                  span(style='color: rgba(0, 0, 0, 0.87); font-size: 14px;') This page can&apos;t load Google Maps correctly.
+                table(style='width: 100%;')
+                  tr
+                    td(style='line-height: 16px; vertical-align: middle;')
+                      a(href='https://developers.google.com/maps/documentation/javascript/error-messages?utm_source=maps_js&utm_medium=degraded&utm_campaign=billing#api-key-and-billing-errors' target='_blank' rel='noopener' style='color: rgba(0, 0, 0, 0.54); font-size: 12px;') Do you own this website?
+                    td(style='text-align: right;')
+                      button.dismissButton OK
+    // /#page-content-wrapper
+  // /#wrapper
