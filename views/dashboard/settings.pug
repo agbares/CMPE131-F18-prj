@@ -75,11 +75,10 @@ html
             p Dear customer, you have to pay your credit card fully before closing it.
     </form>
 
-    <form method='post' action='close-user'>
+    <form method='post' action='settings/close-user'>
     if creditAccount
         if creditAccount.balance == 0 
             p Click here to close your enter banking account at SFG. 
-            input(type="hidden" value=`${creditAccount._id}`)
             p Please enter your password to comfirm this action:<br>
             <input type="password" name = "password">
             <input type="submit" value="Submit">
@@ -87,7 +86,6 @@ html
             p Dear customer, you have to pay your credit card fully before closing your enter banking account at SFG.
     else
         p Click here to close your enter banking account at SFG. 
-        input(type="hidden" value=`${creditAccount._id}`)
         p Please enter your password to comfirm this action:<br>
         <input type="password" name = "password">
         <input type="submit" value="Submit">
