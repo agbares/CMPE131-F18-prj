@@ -22,61 +22,67 @@ html
           li(class="nav-item")
             a(class="nav-link" href="/dashboard") Dashboard
           li(class="nav-item")
-            a(class="nav-link" href="#") Make deposit
+            a(class="nav-link" href="./deposit") Make deposit
           li(class="nav-item")
             a(class="nav-link" href="./billpay") Pay bill
           li(class="nav-item")
-            a(class="nav-link" href="#") Setting
+            a(class="nav-link" href="./settings") Setting
           li(class="nav-item")
-            a(class="nav-link" href="#") Find nearest ATM
+            a(class="nav-link" href="/find-atm") Find nearest ATM
           li(class="nav-item")
             a(class="nav-link" href="../sign-out") Sign Out
     br
     <div class="container" style="margin-top:80px"></div>
 
-    h1 Transfer
-
-    if !checkingAccount && !savingAccount
+    div(class="container" style="margin-top:80px")
+      div(class="row")
+        div(class="col-sm-4")
+        div(class="col-sm-4" style="background-color:AliceBlue; border-radius: 8px; padding-top:20px; padding-right:50px; padding-bottom:30px; padding-left:50px;")
+          h2(class="text-center") Transfer
+          br
+          if !checkingAccount && !savingAccount
             p Transfer function is unavailable due to unavailable account information.
             p Please open a new account or contact for help. 
-        
-    else
-        h2 Dear customer, you can transfer money between your accounts here. 
-        br
+          else
+            h5(class="text-center") Dear customer, you can transfer money between your accounts here. 
+          form(method="post")
+            div(class="text-center") #{error}
+            fieldset(class="form-group") 
+              p Please choose a account you want to transfer money from
+              div(class="form-group")
+                if checkingAccount
+                  <input type="radio" name="transferfrom" value="#{checkingAccount._id}" checked> Checking Account<br>
+                  p Balance: $#{checkingAccount.balance}
+                if savingAccount
+                  <input type="radio" name="transferfrom" value="#{savingAccount._id}"> Saving Account<br>
+                  p Balance: $#{savingAccount.balance}
+              br
 
-        <form method="post">
-            
-            h3 Please choose a account you want to transfer money from
-            if checkingAccount
-                <input type="radio" name="transferfrom" value="#{checkingAccount._id}" checked> Checking Account<br>
-                p Balance: $#{checkingAccount.balance}
-            if savingAccount
-                <input type="radio" name="transferfrom" value="#{savingAccount._id}"> Saving Account<br>
-                p Balance: $#{savingAccount.balance}
-                <br><br>
-                
-            h3 Please choose a account you want to transfer money to
-            if checkingAccount
-                <input type="radio" name="transferto" value="#{checkingAccount._id}" checked> Checking Account <br>
-                p Balance: $#{checkingAccount.balance} 
-            if savingAccount
-                <input type="radio" name="transferto" value="#{savingAccount._id}"> Saving Account<br>
-                p Balance: $#{savingAccount.balance}
-            if creditAccount
-                <input type="radio" name="transferto" value="#{creditAccount._id}"> Credit Account<br>
-                p Balance: $#{creditAccount.balance}
-                <br>
-                
-            h3 Please enter the amount: <br>
-            <input type="number" name="transferamount" ><br>
-            <input type="submit" value="Submit">
-        </form>
+              p Please choose a account you want to transfer money to
+              div(class="form-group")
+                if checkingAccount
+                  <input type="radio" name="transferto" value="#{checkingAccount._id}" checked> Checking Account <br>
+                  p Balance: $#{checkingAccount.balance} 
+                if savingAccount
+                  <input type="radio" name="transferto" value="#{savingAccount._id}"> Saving Account<br>
+                  p Balance: $#{savingAccount.balance}
+                if creditAccount
+                  <input type="radio" name="transferto" value="#{creditAccount._id}"> Credit Account<br>
+                  p Balance: $#{creditAccount.balance}
+                  <br>
+                input(type="radio" name="transferto" value="email")
+                input(type="email" name="email" placeholder="Email")
+                br
 
-    <br><br>
-    p
-      a(href="/dashboard") Return to Dashboard
-    
-      br
-
-    p
-      a(href="../sign-out") Sign Out
+              p Please enter the amount: 
+              div(class="form-group")
+                <input type="number" name="transferamount" step="0.01" ><br>
+              button(type="submit" class="btn btn-primary btn-block" value="Submit") Submit
+          br
+          br
+          p
+            a(href="/dashboard") Return to Dashboard
+            br
+            br
+            a(href="../sign-out") Sign Out
+        div(class="col-sm-4")

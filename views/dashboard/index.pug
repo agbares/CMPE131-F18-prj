@@ -13,7 +13,6 @@ head
 	script(src="js/jquery.backstretch.min.js")
 
 body
-
 	nav(class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top main-nav")
 		button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar")
 			span(class="navbar-toggler-icon")
@@ -22,9 +21,15 @@ body
 		div(class="collapse navbar-collapse" id="collapsibleNavbar")
 			ul(class="nav navbar-nav flex-fill justify-content-center")
 				li(class="nav-item")
-					a(class="nav-link" href="./dashboard") Dashboard
+					a(class="nav-link" href="dashboard/deposit") Make deposit
 				li(class="nav-item")
-					a(class="nav-link" href="#") Find nearest ATM
+					a(class="nav-link" href="dashboard/transfer") Transfer
+				li(class="nav-item")
+					a(class="nav-link" href="dashboard/billpay") Pay bill
+				li(class="nav-item")
+					a(class="nav-link" href="dashboard/settings") Setting
+				li(class="nav-item")
+					a(class="nav-link" href="../find-atm") Find nearest ATM
 				li(class="nav-item")
 					a(class="nav-link" href="../sign-out") Sign Out
 	br
@@ -39,7 +44,7 @@ body
 				| Balance: $#{checkingAccount.balance}
 		else
 			p 
-				a(href="#") Open a Checking account
+				a(href="dashboard/new-account") Open a Checking account
 				br
   
 		if savingAccount
@@ -49,7 +54,7 @@ body
 				| Balance: $#{savingAccount.balance}
 		else
 			p 
-				a(href="#") Open a Saving account
+				a(href="dashboard/new-account/saving") Open a Saving account
 				br
 
 		if creditAccount
@@ -59,11 +64,11 @@ body
 				| Balance: $#{creditAccount.balance}
 		else
 			p
-				a(href="#") Open Credit account
+				a(href="dashboard/new-account/credit") Open Credit account
 				br
 
 		div
-			a(href="#") Make deposit
+			a(href="dashboard/deposit") Make deposit
 			br
 			br
 
@@ -80,3 +85,5 @@ body
 			br
 
 			a(href="../sign-out") Sign Out
+
+	

@@ -9,6 +9,7 @@ var router = express.Router();
 var auth = require('../middlewares/auth');
 var User = require('../models/user');
 var Account = require('../models/account');
+var Transaction = require('../models/transaction');
 
 /* Routes */
 router.get('/', auth.isAuthenticated, function(req, res) {
@@ -49,22 +50,22 @@ router.post('/change-password', auth.isAuthenticated, function(req, res, next) {
   const newPass = req['body']['new-password'];
   const confirmNewPass = req['body']['confirm-new-password'];
 
-  if(isEmpty == true){
-    request.flash('error', 'A field is empty. ');
-    return res.redirect('change-password');
+  if(isEmpty(oldPass, newPass) == true){
+    req.flash('error', 'A field is empty. ');
+    return res.redirect('/dashboard/settings');
   }
 
-  if(samePass == true){
-    request.flash('error', 'Old password and new password is the same. ');
-    return res.redirect('change-password');
+  if(samePass(oldPass, newPass) == true){
+    req.flash('error', 'Old password and new password is the same. ');
+    return res.redirect('/dashboard/settings');
   }
 
   if(newPass == confirmNewPass){
     req.user.changePassword(oldPass, newPass)
     .then((response)=>{
       if(response == false){
-        request.flash('error', 'Password does not match your current password. ');
-        return res.redirect('change-password');
+        req.flash('error', 'Password does not match your current password. ');
+        return res.redirect('/dashboard/settings');
       }
       else{
         return res.redirect('/dashboard');
@@ -76,47 +77,94 @@ router.post('/change-password', auth.isAuthenticated, function(req, res, next) {
   }
 
   else{
-    request.flash('error', 'New password confirmation is wrong. ');
-    return res.redirect('change-password');
+    req.flash('error', 'New password confirmation is wrong. ');
+    return res.redirect('/dashboard/settings');
   }
 });
 
-router.post('/close-account'), auth.isAuthenticated, function(req, res, next){
+
+router.post('/close-account', auth.isAuthenticated, function(req, res, next){
   const closeAcc = req['body']['account-id'];
   (async function() {
-    var acc = await Account.getAccount(closeAcc)
-    .then((acc)=>{
+    var acc = await Account.getAccount(closeAcc);
       if(acc.type == 'credit'){
         if(acc.balance > 0){
           request.flash('error', 'You still owe money for your credit account. ');
-          return res.redirect('close-account');
+          return res.redirect('/dashboard/settings');
         }
         else{
-          return Account.findByIdAndRemove(closeAcc);
+          await Account.close(acc._id);
+          return res.redirect('/dashboard');
         }
       }
       else if(acc.type == 'saving'){
         if(acc.balance == 0){
-          return Account.findByIdAndRemove(closeAcc)
+          await Account.close(acc._id);
+          return res.redirect('/dashboard');
         }
         else{
-          var checking_acc = Account.findOne({user_ID: req.user._id, type: 'checking'});
-          checking_acc.balance = parseInt(checking_acc.balance) + parseInt(acc.balance);
-          return Account.findByIdAndRemove(closeAcc);
+          await Account.close(acc._id);
+          return res.redirect('/dashboard');
         }
       }
-    })
+  })().then((res) => {
+
+  }).catch((err) => {
+    next(err);
+  })
+});
+
+router.post('/close-user', auth.isAuthenticated, function(req, res, next){
+  const password = req['body']['password'];
+
+  (async function() {
+    if(await req.user.authenticate(password) == false){
+      req.flash('error', 'Inputed password does not match with the database. ');
+      return res.redirect('/dashboard/settings');
+    }
+
+    var checkings = await Account.findOne({type: 'checking', user_ID: req.user._id});
+    var savings = await Account.findOne({type: 'saving', user_ID: req.user._id});
+    var credits = await Account.findOne({type: 'credit', user_ID: req.user._id});
+
+    if((checkings !== null && hasBalance(checkings.balance) == true) || checkings === null) {
+      if((savings !== null && hasBalance(savings.balance) == true) || savings === null){
+        if((credits !== null && credits.balance == 0) || credits === null){
+          
+          if (savings !== null)
+          Account.close(savings._id);
+          
+          if (credits !== null)
+          Account.close(credits._id);
+          
+          if (checkings !== null)
+            Account.close(checkings._id);
+          
+            // Delete user and accompanying accounts
+          await User.findByIdAndDelete(req.user._id).exec();
+          return res.redirect('/');
+        }
+        else{
+          req.flash('error', 'You still owe money for your credit account. ');
+          return res.redirect('/dashboard/settings');
+        }
+      }
+      else{
+        req.flash('error', 'You have a negative balance in your savings account. ');
+        return res.redirect('/dashboard/settings');
+      }
+    }
+    else{
+      req.flash('error', 'You have a negative balance in your checkings account. ');
+      return res.redirect('/dashboard/settings');
+    }
 
   })().then((res) => {
 
   }).catch((err) => {
     next(err);
   })
-}
-
-router.post('/close-user'), auth.isAuthenticated, function(req, res, next){
-
-}
+});
 
 function isEmpty(oldPass, newPass){
   if(oldPass.length == 0 || newPass.length == 0){
@@ -129,6 +177,15 @@ function isEmpty(oldPass, newPass){
 
 function samePass(oldPass, newPass){
   if(oldPass == newPass){
+    return true;
+  }
+  else{
+    return false;
+  }
+}
+
+function hasBalance(balance){
+  if(balance >= 0){
     return true;
   }
   else{

@@ -18,7 +18,8 @@ router.get('/:accountId', auth.isAuthenticated, auth.accountBelongsToUser, funct
   (async function() {
     const account = await Account.getAccount(accountId);
     const transactions = await Transaction.getTransactions(accountId);
-
+    
+    transactions.reverse(); //The new added code to reverse the transactions. 
     res.render('dashboard/account', {account: account, transactions: transactions});  
 
   })().catch((err) => {
