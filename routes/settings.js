@@ -89,7 +89,7 @@ router.post('/close-account', auth.isAuthenticated, function(req, res, next){
     var acc = await Account.getAccount(closeAcc);
       if(acc.type == 'credit'){
         if(acc.balance > 0){
-          request.flash('error', 'You still owe money for your credit account. ');
+          req.flash('error', 'You still owe money for your credit account. ');
           return res.redirect('/dashboard/settings');
         }
         else{
