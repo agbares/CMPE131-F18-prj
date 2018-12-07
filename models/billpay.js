@@ -113,12 +113,28 @@ function scheduleBillpay(billpay, paymentDate) {
     Account.getAccount(billpay.account_ID).then(account => {
       console.log(`Executing scheduled billpay:\n${billpay}`);
       
-      // Deduct balance from account
-      return account.deduct(billpay.balance);
+      // Add balance to credit account
+      if (account.type === 'credit')
+        return account.deposit(billpay.balance);
       
-    }).then(() => {
+      // Deduct balance from other accounts
+      else
+        return account.deduct(billpay.balance);
+      
+    }).then((account) => {
+      
+      var balancePaid;
+
+      // Balance paid for credit is a positive balance onto the account
+      if (account.type === 'credit')
+        balancePaid = billpay.balance;
+      
+      // Balance paid to all other accounts are a negative balance onto the account
+      else
+        balancePaid = billpay.balance * -1;
+      
       // Create relevant transaction
-      return Transaction.createTransaction(billpay.account_ID, `Bill No.: ${billpay.bill_number}`, 'Bill Payment', `Bill payment for bill number: ${billpay.bill_number}`, (billpay.balance * -1), 'Processed')
+      return Transaction.createTransaction(billpay.account_ID, `Bill No.: ${billpay.bill_number}`, 'Bill Payment', `Bill payment for bill number: ${billpay.bill_number}`, balancePaid, 'Processed')
       
     }).then(() => {
       // Delete billpay from DB

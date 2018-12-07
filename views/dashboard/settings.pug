@@ -33,73 +33,75 @@ html
     br
     <div class="container" style="margin-top:80px"></div>
 
-    h1 Setting
+    div(class="container" style="margin-top:80px")
+        div(class="row")
+            div(class="col-sm-4")
+            div(class="col-sm-4" style="background-color:AliceBlue; border-radius: 8px; padding-top:20px; padding-right:50px; padding-bottom:30px; padding-left:50px;")
+                h2(class="text-center") Setting
+                br
+                h5(class="text-center") Dear customer, you can change your password here. 
+                form(method="post" action='settings/change-password')
+                    div(class="text-center") #{error}
+                    fieldset(class="form-group") 
+                        p Please enter your old password:
+                        div(class="form-group")
+                            <input type="text" name="old-password">
+                        p Please enter your new password:
+                        div(class="form-group")
+                            <input type="password" name="new-password">
+                        p Please re-enter your new password:
+                        div(class="form-group")
+                            <input type="password" name="confirm-new-password">
+                        button(type="submit" class="btn btn-primary btn-block" value="Submit") Submit
+                br
+                br
+                br
+                
+                h5(class="text-center") Dear customer, you can close your accounts here.
+                form(method="post" action='settings/close-account')
+                    div(class="text-center") #{error}
+                    fieldset(class="form-group") 
+                        if savingAccount
+                            p Click here to close your Saving Account. 
+                            div(class="form-group")
+                                input(type="hidden" name="account-id" value=`${savingAccount._id}`)
+                                <input type="submit" value="Submit">
+                        if creditAccount
+                            if creditAccount.balance == 0 
+                                p Click here to close your Credit Account. 
+                                div(class="form-group")
+                                    input(type="hidden" name="account-id" value=`${creditAccount._id}`)
+                                    <input type="submit" value="Submit">
+                            else
+                                p *Dear customer, you have to pay your credit card fully before closing it.
+                br
+                br
+                br
+                
+                h5(class="text-center") Dear customer, you can close your enter SFG banking account here.
+                form(method="post" action='settings/close-user')
+                    div(class="text-center") #{error}
+                    fieldset(class="form-group") 
+                        if creditAccount
+                            if creditAccount.balance == 0 
+                                p Click here to close your enter banking account at SFG. 
+                                p Please enter your password to comfirm this action:<br>
+                                div(class="form-group")
+                                    <input type="password" name = "password">
+                                    <input type="submit" value="Submit">
+                            else
+                                p *Dear customer, you have to pay your credit card fully before closing your enter banking account at SFG.
+                        else
+                            p Click here to close your enter banking account at SFG. 
+                            p Please enter your password to comfirm this action:<br>
+                            div(class="form-group")
+                                <input type="password" name = "password">
+                                <input type="submit" value="Submit">
 
-    h2 Dear customer, you can change your password here. 
-	div(class="text-center") #{error}
-
-    <form method='post' action='settings/change-password'>
-    
-        p Please enter your old password:<br>
-        <input type="text" name="old-password">
-        br
-        p Please enter your new password:<br>
-        <input type="password" name="new-password">
-        br
-        p Please re-enter your new password:<br>
-        <input type="password" name="confirm-new-password">
-        br
-        br
-        <input type="submit" value="Submit">
-    </form>
-
-    br
-    br
-    br
-
-    h2 Dear customer, you can close your accounts here.
-    
-    <form method='post' action='settings/close-account'>
-    if savingAccount
-        p Click here to close your Saving Account. 
-        input(type="hidden" name="account-id" value=`${savingAccount._id}`)
-        <input type="submit" value="Submit">
-    </form>
-
-    <form method='post' action='settings/close-account'>
-    if creditAccount
-        if creditAccount.balance == 0 
-            p Click here to close your Credit Account. 
-            input(type="hidden" name="account-id" value=`${creditAccount._id}`)
-            <input type="submit" value="Submit">
-        else
-            p Dear customer, you have to pay your credit card fully before closing it.
-    </form>
-
-    <form method='post' action='settings/close-user'>
-    if creditAccount
-        if creditAccount.balance == 0 
-            p Click here to close your enter banking account at SFG. 
-            p Please enter your password to comfirm this action:<br>
-            <input type="password" name = "password">
-            <input type="submit" value="Submit">
-        else
-            p Dear customer, you have to pay your credit card fully before closing your enter banking account at SFG.
-    else
-        p Click here to close your enter banking account at SFG. 
-        p Please enter your password to comfirm this action:<br>
-        <input type="password" name = "password">
-        <input type="submit" value="Submit">
-    </form>
-
-
-    <br><br>
-    p
-      a(href="/dashboard") Return to Dashboard
-    
-      br
-
-    p
-      a(href="../sign-out") Sign Out
-
-    
+                <br><br>
+                p
+                    a(href="/dashboard") Return to Dashboard
+                    br
+                    br
+                    a(href="../sign-out") Sign Out
+            div(class="col-sm-4")

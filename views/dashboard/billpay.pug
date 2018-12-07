@@ -34,117 +34,116 @@ html
 
     <div class="container" style="margin-top:80px"></div>
 
-    h1 Pay bill
+    div(class="container" style="margin-top:80px")
+      div(class="row")
+        div(class="col-sm-4")
+        div(class="col-sm-4" style="background-color:AliceBlue; border-radius: 8px; padding-top:20px; padding-right:50px; padding-bottom:30px; padding-left:50px;")
+          h2(class="text-center") Pay bill
+          br
+          if !checkingAccount && !savingAccount &&! creditAccount
+            p Pay bill function is unavailable due to unavailable account information.
+            p Please open a new account or contact for help. 
+          else
+            h5(class="text-center") Dear customer, you can pay your bill here. 
+          form(method="post")
+            div(class="text-center") #{error}
+            fieldset(class="form-group") 
+              p Please enter the bill number:
+              div(class="form-group")
+                <input type="text" name="billnumber">
+              br
 
-    if !checkingAccount && !savingAccount &&! creditAccount
-      p Pay bill function is unavailable due to unavailable account information.
-      p Please open a new account or contact for help. 
-        
-    else 
-      h2 Dear customer, you can pay your bill here. 
-      div(class="text-center") #{error}
+              p Please choose a account you want to pay the bill with
+              div(class="form-group")
+                if checkingAccount
+                  input(type="radio" name="paywith" value=`${checkingAccount._id}` checked) 
+                  |  Checking Account
+                  br
+                  p Balance: $#{checkingAccount.balance} 
+                if savingAccount
+                  input(type="radio" name="paywith" value=`${savingAccount._id}`)
+                  |  Saving Account
+                  br
+                  p Balance: $#{savingAccount.balance}
+                if creditAccount
+                  input(type="radio" name="paywith" value=`${creditAccount._id}`)
+                  |  Credit Account
+                  br
+                  p Balance: $#{creditAccount.balance}
+                  <br>
 
-      <form method="post">
-          p Please enter the bill number:
-          <input type="text" name="billnumber"><br>
+              p Please enter the amount: 
+              div(class="form-group")
+                <input type="number" name="payamount" min="1"><br>
+              
+              p Please add a note:
+              div(class="form-group")
+                <input type="text" name="paynote" ><br>
+                <br>
+                <input type="hidden" name="type" value="instant">
+              button(type="submit" class="btn btn-primary btn-block" value="Submit") Submit
+          br
+          br
+          br
+          h5(class="text-center") Dear customer, you can schedule a payment here. 
+          form(method="post")
+            div(class="text-center") #{error}
+            fieldset(class="form-group") 
+              p Please enter the bill number:
+              div(class="form-group")
+                <input type="text" name="billnumber">
+              br
+
+              p Please choose a account you want to pay the bill with
+              div(class="form-group")
+                if checkingAccount
+                  input(type="radio" name="paywith" value=`${checkingAccount._id}` checked) 
+                  |  Checking Account
+                  br
+                  p Balance: $#{checkingAccount.balance} 
+                if savingAccount
+                  input(type="radio" name="paywith" value=`${savingAccount._id}`)
+                  |  Saving Account
+                  br
+                  p Balance: $#{savingAccount.balance}
+                if creditAccount
+                  input(type="radio" name="paywith" value=`${creditAccount._id}`)
+                  |  Credit Account
+                  br
+                  p Balance: $#{creditAccount.balance}
+                  <br>
+
+              p Please enter the amount: 
+              div(class="form-group")
+                <input type="number" name="payamount" min="1"><br>
+              
+              p Please enter the month:
+              div(class="form-group")
+                <input type="number" name="month" min="1" max="12"><br>
+
+              p Please enter the day:
+              div(class="form-group")
+                <input type="number" name="day" min="1" max="31"><br>
+
+              p Please enter the year:
+              div(class="form-group")
+                input(type="number" name="year" min=`${(new Date(Date.now())).getFullYear()}`)
+
+              p Please add a note:
+              div(class="form-group")
+                <input type="text" name="paynote" ><br>
+                <br>
+                <input type="hidden" name="type" value="instant">
+              button(type="submit" class="btn btn-primary btn-block" value="Submit") Submit
+          br
           br
 
-          p Please choose a account you want to pay the bill with
-          if checkingAccount
-            input(type="radio" name="paywith" value=`${checkingAccount._id}` checked) 
-            |  Checking Account
+
+          br
+          br
+          p
+            a(href="/dashboard") Return to Dashboard
             br
-            p Balance: $#{checkingAccount.balance} 
-          
-          if savingAccount
-            input(type="radio" name="paywith" value=`${savingAccount._id}`)
-            |  Saving Account
             br
-            p Balance: $#{savingAccount.balance}
-          
-          if creditAccount
-            input(type="radio" name="paywith" value=`${creditAccount._id}`)
-            |  Credit Account
-            br
-            p Balance: $#{creditAccount.balance}
-            <br>
-
-          p Please enter the amount:
-          <input type="number" name="payamount" min="1"><br>
-          br
-
-          p Please add a note:
-          <input type="text" name="paynote" ><br>
-          <br>
-          <input type="hidden" name="type" value="instant">
-          <input type="submit" value="Submit">
-          <input type="reset">
-      </form>
-
-      br
-      br
-      br
-      h2 Dear customer, you can schedule a payment here. 
-
-      <form method="post">
-          p Please enter the bill number:
-          <input type="text" name="billnumber"><br>
-          br
-          p Please choose a account you want to pay the bill with
-          
-          if checkingAccount
-            input(type="radio" name="paywith" value=`${checkingAccount._id}` checked) 
-            |  Checking Account
-            br
-            p Balance: $#{checkingAccount.balance} 
-          
-          if savingAccount
-            input(type="radio" name="paywith" value=`${savingAccount._id}`)
-            |  Saving Account
-            br
-            p Balance: $#{savingAccount.balance}
-          
-          if creditAccount
-            input(type="radio" name="paywith" value=`${creditAccount._id}`)
-            |  Credit Account
-            br
-            p Balance: $#{creditAccount.balance}
-            <br>
-
-          p Please enter the amount:
-          <input type="number" name="payamount" min="1"><br>
-          br
-
-          p Please enter the month:
-          <input type="number" name="month" min="1" max="12"><br>
-          br
-          p Please enter the day:
-          <input type="number" name="day" min="1" max="31"><br>
-          br
-          p Please enter the year:
-          input(type="number" name="year" min=`${(new Date(Date.now())).getFullYear()}`)
-          <br>
-          br
-
-          p Please add a note:
-          <input type="text" name="paynote" ><br>
-          <br>
-          <input type="hidden" name="type" value="scheduled">
-          <input type="submit" value="Submit">
-          <input type="reset">
-      </form>
-
-
-    br
-    br
-    br
-
-    p
-      a(href="/dashboard") Return to Dashboard
-    
-      br
-
-    p
-      a(href="../sign-out") Sign Out
-
-    
+            a(href="../sign-out") Sign Out
+        div(class="col-sm-4")
