@@ -58,6 +58,7 @@ body
 							label(class="form-check-label")
 								<input class="form-check-input" type="radio" name="deposit-to" value="#{checkingAccount._id}" id="deposit-checking" value="checking" checked> Checking ($#{checkingAccount.balance})
 							if savingAccount
+								br
 								label(class="form-check-label")
 									<input class="form-check-input" type="radio" name="deposit-to" value="#{savingAccount._id}" id="deposit-saving"> Saving ($#{savingAccount.balance})
 					div(class="collapse show multi-collapse" id="collapseRouting")
