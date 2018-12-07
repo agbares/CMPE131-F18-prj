@@ -141,7 +141,7 @@ router.post('/billpay', auth.isAuthenticated, function(req, res, next) {
     
     // Instant
     if (req.body.type === 'instant') {
-      date = Date.now() + 10000;
+      date = Date.now() + 2000;
     }
     
     // Scheduled
@@ -163,7 +163,12 @@ router.post('/billpay', auth.isAuthenticated, function(req, res, next) {
     }
 
     // Check input
-    if (isNaN(req.body.payamount) || parseFloat(req.body.payamount) <= 0) { console.log('test')
+    if (req.body.billnumber.length === 0) {
+      req.flash('error', 'Bill number required');
+      return;
+    }
+    
+    if (isNaN(req.body.payamount) || parseFloat(req.body.payamount) <= 0 || req.body.payamount.length === 0) {
       req.flash('error', 'Amount must be a number greater than 0');
       console.error('invalid amount')
       return;
@@ -179,7 +184,7 @@ router.post('/billpay', auth.isAuthenticated, function(req, res, next) {
 
     return billpay;
   })().then(response => {
-    if (!response.success)
+    if (response !== undefined && !response.success)
       req.flash('error', response.message);
 
     res.redirect('billpay');
