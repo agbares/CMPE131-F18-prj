@@ -98,13 +98,13 @@ router.post('/close-account', auth.isAuthenticated, function(req, res, next){
         }
       }
       else if(acc.type == 'saving'){
-        if(acc.balance == 0){
+        if(acc.balance >= 0){
           await Account.close(acc._id);
           return res.redirect('/dashboard');
         }
         else{
-          await Account.close(acc._id);
-          return res.redirect('/dashboard');
+          req.flash('error', 'You still owe money for your saving account. ');
+          return res.redirect('/dashboard/settings');
         }
       }
   })().then((res) => {
