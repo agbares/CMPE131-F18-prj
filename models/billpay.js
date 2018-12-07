@@ -40,6 +40,11 @@ var billpaySchema = mongoose.Schema({
  */
 billpaySchema.statics.createBillpay = async function(user_ID, account_ID, billNumber, balance, note, paymentTimestamp, isRecurring) {
 
+  var responseObj = {
+    success : null,
+    message : null
+  };
+
   // Create new billpay object based on schema and parameters
   var newBillpay = this({
     user_ID: user_ID,
@@ -56,13 +61,30 @@ billpaySchema.statics.createBillpay = async function(user_ID, account_ID, billNu
   const billpay = await newBillpay.save();
 
   // Ignore scheduling any recurring billpay
-  if (newBillpay.is_recurring)
-    return billpay;
+  if (newBillpay.is_recurring) {
+    responseObj.success = false;
+    responseObj.message = 'Cannot schedule recurring billpay';
+    return responseObj;
+  }
+  
+  const account = await Account.getAccount(account_ID);
+  
+  // Do not allow balances greater than available
+  if ((account.type !== 'credit') && account.balance < balance) {
+    responseObj.success = false;
+    responseObj.message = 'Not enough balance to pay bill.';
+    return responseObj;  
+
+  } else if ((account.type === 'credit') ) {
+    
+  }
+  
 
   // Schedule the billpay
   scheduleBillpay.call(this, billpay, new Date(billpay.payment_timestamp));
 
-  return billpay;
+  responseObj.success = true;
+  return responseObj;
 }
 
 /**
