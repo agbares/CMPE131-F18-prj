@@ -220,8 +220,8 @@ router.post('/deposit', auth.isAuthenticated, function(req, res, next) {
   const accountNumber = req.body['account-number'];
   const accountNumberToDepositTo = req.body['deposit-to'];
   const amount = parseFloat(req.body.amount);
-  const imgBack = req.body['img-back'];
-  const imgFront = req.body['img-front'];
+  const imgBack = (req.body['img-back'] !== undefined) ? req.body['img-back'] : '';
+  const imgFront = (req.body['img-front'] !== undefined) ? req.body['img-front'] : '';
 
   (async () => {
     
